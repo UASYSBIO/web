@@ -9,39 +9,58 @@
             margin: 0;
         }
         .bg-image {
-           
             background-image: url("images/bg.jpg");
-
             height: 100%;
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
-
-            
             filter: blur(4px);
             -webkit-filter: blur(4px);
         }
 
-        .bg-text {
+        .bg-text, .publications-block {
             background-color: rgba(0, 0, 0, 0.5); /* Dark background with opacity */
             color: white;
             font-size: 32px;
-            font-family: "Bahnschrift", Arial- sans-serif;
+            font-family: "Bahnschrift", Arial, sans-serif;
             font-weight: bold;
             border: 3px solid #f1f1f1;
             position: absolute;
-            top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
             z-index: 999;
             width: 80%;
             padding: 20px;
             text-align: center;
         }
 
-	.smaller-text {
+        .bg-text {
+            top: 40%;
+        }
+
+        .smaller-text {
             font-size: 24px;
             margin-top: 20px;
+        }
+
+        .publications-block {
+            top: 60%;
+            text-align: left;
+            font-size: 24px;
+        }
+
+        .publication-item {
+            margin-bottom: 15px;
+        }
+
+        .publication-item strong {
+            display: block;
+            margin-top: 5px;
+            font-size: 22px;
+        }
+
+        .publication-item em {
+            font-size: 20px;
         }
 
     </style>
@@ -52,8 +71,54 @@
 
 <div class="bg-text">
     <p>UKRAINIAN INSTITUTE FOR SYSTEMS BIOLOGY AND MEDICINE</p>
-    <p class="small-text">Stay tuned.</p>
+    <p class="smaller-text">Stay tuned.</p>
 </div>
+
+<div class="publications-block">
+    <h2>Publications</h2>
+    <div id="publication-list"></div>
+</div>
+
+<script>
+    const publications = [
+        {
+            doi: '10.1016/j.cels.2024.03.006 ',
+            underscoreNames: ['Oleksandr Petrenko']
+        }
+    ];
+
+    function fetchPublication(doi, underscoreNames) {
+        fetch(`https://api.crossref.org/works/${doi}`)
+            .then(response => response.json())
+            .then(data => {
+                const pubData = data.message;
+                const authors = pubData.author.map(author => {
+                    let fullName = `${author.given} ${author.family}`;
+                    if (underscoreNames.includes(fullName)) {
+                        fullName = `<u>${fullName}</u>`;
+                    }
+                    return fullName;
+                }).join(', ');
+
+                const publicationHTML = `
+                    <div class="publication-item">
+                        ${authors}<br>
+                        <strong>${pubData.title[0]}</strong>
+                        <em>${pubData['container-title'][0]}</em>,
+                        ${pubData.volume}, ${pubData.page} (${pubData['published-print']['date-parts'][0][0]}).
+                        <a href="https://doi.org/${doi}" style="color: #f1f1f1;">https://doi.org/${doi}</a>
+                    </div>
+                `;
+
+                document.getElementById('publication-list').innerHTML += publicationHTML;
+            })
+            .catch(error => console.error('Error fetching publication:', error));
+    }
+
+    publications.forEach(pub => {
+        fetchPublication(pub.doi, pub.underscoreNames);
+    });
+</script>
 
 </body>
 </html>
