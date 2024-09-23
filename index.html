@@ -3,122 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <title>Ukrainian Institute for Systems Biology and Medicine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include IBM Plex Sans from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,700&display=swap" rel="stylesheet">
+    <!-- Include Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- CSS Styles -->
     <style>
+        /* Reset some basic elements */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body, html {
             height: 100%;
-            margin: 0;
-        }
-        .bg-image {
-            background-image: url("images/bg.jpg");
-            height: 100%;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            filter: blur(4px);
-            -webkit-filter: blur(4px);
+            font-family: 'IBM Plex Sans', sans-serif;
+            color: #333;
         }
 
-        .bg-text, .publications-block {
-            background-color: rgba(0, 0, 0, 0.5); /* Dark background with opacity */
-            color: white;
-            font-size: 32px;
-            font-family: "Bahnschrift", Arial, sans-serif;
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+        }
+
+        .navbar .logo {
+            font-size: 24px;
             font-weight: bold;
-            border: 3px solid #f1f1f1;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        .navbar ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .navbar ul li a:hover {
+            color: #007BFF;
+        }
+
+        /* Hero Section */
+        .hero {
+            background-image: url("images/bg.jpg");
+            height: 100vh;
+            background-position: center;
+            background-size: cover;
+            position: relative;
+        }
+
+        .hero::after {
+            content: '';
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 999;
-            width: 80%;
-            padding: 20px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
             text-align: center;
+            color: #fff;
+            max-width: 800px;
+            padding: 20px;
+            margin: 0 auto;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
         }
 
-        .bg-text {
-            top: 40%;
+        .hero-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
         }
 
-        .smaller-text {
+        .hero-content p {
             font-size: 24px;
-            margin-top: 20px;
+            margin-bottom: 40px;
         }
 
-        .publications-block {
-            top: 60%;
-            text-align: left;
-            font-size: 24px;
+        .hero-content a {
+            text-decoration: none;
+            padding: 15px 30px;
+            background-color: #000;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+
+        .hero-content a:hover {
+            background-color: #333;
+        }
+
+        /* Publications Section */
+        .publications {
+            padding: 80px 50px;
+            background-color: #f9f9f9;
+        }
+
+        .publications h2 {
+            text-align: center;
+            margin-bottom: 60px;
+            font-size: 36px;
         }
 
         .publication-item {
-            margin-bottom: 15px;
+            margin-bottom: 40px;
         }
 
-        .publication-item strong {
-            display: block;
-            margin-top: 5px;
-            font-size: 22px;
+        .publication-item h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
         }
 
-        .publication-item em {
+        .publication-item p {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .publication-item a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .publication-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 40px 50px;
+            text-align: center;
+        }
+
+        .footer p {
+            margin-bottom: 10px;
+        }
+
+        .footer .social-icons a {
+            color: #fff;
+            margin: 0 10px;
             font-size: 20px;
+            transition: color 0.3s;
         }
 
+        .footer .social-icons a:hover {
+            color: #007BFF;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .navbar ul {
+                gap: 15px;
+            }
+
+            .hero-content h1 {
+                font-size: 36px;
+            }
+
+            .hero-content p {
+                font-size: 20px;
+            }
+
+            .publications {
+                padding: 60px 20px;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="bg-image"></div>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">UISBM</div>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#publications">Publications</a></li>
+        </ul>
+    </nav>
 
-<div class="bg-text">
-    <p>UKRAINIAN INSTITUTE FOR SYSTEMS BIOLOGY AND MEDICINE</p>
-    <p class="smaller-text">Stay tuned.</p>
-</div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Ukrainian Institute for Systems Biology and Medicine</h1>
+            <p>Pioneering research in systems biology and novel therapeutics.</p>
+            <a href="#publications">STAY TUNED</a>
+        </div>
+    </section>
 
-<div class="publications-block">
-    <h2>Publications</h2>
-    <div id="publication-list"></div>
-</div>
+    <!-- Publications Section -->
+    <section id="publications" class="publications">
+        <h2>Recent Publications</h2>
+        <div id="publication-list"></div>
+    </section>
 
-<script>
-    const publications = [
-        {
-            doi: '10.1016/j.cels.2024.03.006 ',
-            underscoreNames: ['Oleksandr Petrenko']
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Ukrainian Institute for Systems Biology and Medicine</p>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </footer>
+
+    <!-- JavaScript to Fetch Publications -->
+    <script>
+        const publications = [
+            {
+                doi: '10.7124/bc.000AEE',
+                underscoreNames: ['V. V. Bashynska', 'O. O. Petrenko']
+            },
+            {
+                doi: '10.1016/j.cels.2024.03.006',
+                underscoreNames: ['Oleksandr Petrenko']
+            }
+        ];
+
+        function fetchPublication(doi, underscoreNames) {
+            fetch(`https://api.crossref.org/works/${encodeURIComponent(doi)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const pubData = data.message;
+                    const authors = pubData.author.map(author => {
+                        let fullName = `${author.given} ${author.family}`;
+                        if (underscoreNames.includes(fullName)) {
+                            fullName = `<u>${fullName}</u>`;
+                        }
+                        return fullName;
+                    }).join(', ');
+
+                    const publicationHTML = `
+                        <div class="publication-item">
+                            <h3>${pubData.title[0]}</h3>
+                            <p>${authors}</p>
+                            <p><em>${pubData['container-title'][0]}</em>, ${pubData.volume || ''}, ${pubData.page || ''} (${pubData['published-print']['date-parts'][0][0]}).</p>
+                            <a href="https://doi.org/${doi}" target="_blank">View Publication</a>
+                        </div>
+                    `;
+
+                    document.getElementById('publication-list').innerHTML += publicationHTML;
+                })
+                .catch(error => console.error('Error fetching publication:', error));
         }
-    ];
 
-    function fetchPublication(doi, underscoreNames) {
-        fetch(`https://api.crossref.org/works/${doi}`)
-            .then(response => response.json())
-            .then(data => {
-                const pubData = data.message;
-                const authors = pubData.author.map(author => {
-                    let fullName = `${author.given} ${author.family}`;
-                    if (underscoreNames.includes(fullName)) {
-                        fullName = `<u>${fullName}</u>`;
-                    }
-                    return fullName;
-                }).join(', ');
-
-                const publicationHTML = `
-                    <div class="publication-item">
-                        ${authors}<br>
-                        <strong>${pubData.title[0]}</strong>
-                        <em>${pubData['container-title'][0]}</em>,
-                        ${pubData.volume}, ${pubData.page} (${pubData['published-print']['date-parts'][0][0]}).
-                        <a href="https://doi.org/${doi}" style="color: #f1f1f1;">https://doi.org/${doi}</a>
-                    </div>
-                `;
-
-                document.getElementById('publication-list').innerHTML += publicationHTML;
-            })
-            .catch(error => console.error('Error fetching publication:', error));
-    }
-
-    publications.forEach(pub => {
-        fetchPublication(pub.doi, pub.underscoreNames);
-    });
-</script>
+        publications.forEach(pub => {
+            fetchPublication(pub.doi, pub.underscoreNames);
+        });
+    </script>
 
 </body>
 </html>
