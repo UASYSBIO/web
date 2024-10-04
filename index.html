@@ -70,7 +70,11 @@
             background-position: center 15%; /* Move field of view up by 15% */
             background-size: cover;
             position: relative;
-            /* Removed margin-top to eliminate gap */
+            padding-top: 80px; /* Add padding equal to navbar height */
+            display: flex;
+            align-items: center; /* Vertically center the content */
+            justify-content: center;
+            text-align: center;
         }
 
         .hero::after {
@@ -86,15 +90,11 @@
 
         .hero-content {
             position: relative;
-            text-align: center;
             color: #fff;
             max-width: 800px;
             padding: 20px;
             margin: 0 auto;
-            top: 45%; /* Adjusted top position */
-            transform: translateY(-50%);
             z-index: 2;
-            padding-top: 60px; /* Reduced padding to bring content slightly up */
         }
 
         .hero-content h1 {
@@ -143,16 +143,16 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 30px;
-            max-width: 1200px; /* Limit the maximum width */
-            margin: 0 auto; /* Center the container */
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .focus-item {
             background-color: #1A001A; /* Very dark purple */
             color: #fff;
             padding: 40px 20px;
-            flex: 1 1 300px; /* Set a minimum width */
-            max-width: 350px; /* Limit the block width */
+            flex: 1 1 300px;
+            max-width: 350px;
             box-sizing: border-box;
             border-radius: 10px;
             transition: transform 0.3s;
