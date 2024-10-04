@@ -18,26 +18,31 @@
         }
 
         body, html {
-            height: 100%;
             font-family: 'IBM Plex Sans', sans-serif;
-            color: #333;
+            color: #fff;
+            background-color: #000;
+            scroll-behavior: smooth;
         }
 
         /* Navigation Bar */
         .navbar {
             position: fixed;
+            top: 0; /* Ensure navbar is at the very top */
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: transparent;
             padding: 15px 50px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 1000;
+            border-bottom: 1px solid #fff;
         }
 
         .navbar .logo {
             font-size: 24px;
             font-weight: bold;
+            color: #fff;
+            text-transform: uppercase;
         }
 
         .navbar ul {
@@ -48,22 +53,24 @@
 
         .navbar ul li a {
             text-decoration: none;
-            color: #333;
+            color: #fff;
             font-weight: 500;
             transition: color 0.3s;
+            text-transform: uppercase;
         }
 
         .navbar ul li a:hover {
-            color: #007BFF;
+            color: #FFA500; /* Orange color */
         }
 
         /* Hero Section */
         .hero {
             background-image: url("images/bg.jpg");
-            height: 100vh;
-            background-position: center;
+            height: 400px;
+            background-position: center 15%; /* Move field of view up by 15% */
             background-size: cover;
             position: relative;
+            margin-top: 80px;
         }
 
         .hero::after {
@@ -87,11 +94,14 @@
             top: 50%;
             transform: translateY(-50%);
             z-index: 2;
+            padding-top: 40px; /* Add extra padding to move content away from navbar */
         }
 
         .hero-content h1 {
             font-size: 48px;
             margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            text-transform: uppercase;
         }
 
         .hero-content p {
@@ -102,27 +112,77 @@
         .hero-content a {
             text-decoration: none;
             padding: 15px 30px;
-            background-color: #000;
-            color: #fff;
+            background-color: #FFA500; /* Orange color */
+            color: #000;
             border-radius: 5px;
             font-size: 18px;
             transition: background-color 0.3s;
+            text-transform: uppercase;
         }
 
         .hero-content a:hover {
-            background-color: #333;
+            background-color: #cc8400; /* Darker orange */
+        }
+
+        /* Our Focus Section */
+        .focus {
+            padding: 80px 50px;
+            background-color: #000;
+            text-align: center;
+        }
+
+        .focus h2 {
+            font-size: 36px;
+            margin-bottom: 60px;
+            color: #FFA500; /* Orange color */
+            text-transform: uppercase;
+        }
+
+        .focus-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .focus-item {
+            background-color: #200039; /* Dark purple color */
+            color: #fff; /* White text */
+            padding: 40px 20px;
+            flex: 1 1 calc(33% - 60px);
+            max-width: calc(33% - 60px);
+            box-sizing: border-box;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .focus-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .focus-item i {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #FFA500; /* Orange color */
+        }
+
+        .focus-item h3 {
+            font-size: 24px;
+            text-transform: uppercase;
         }
 
         /* Publications Section */
         .publications {
             padding: 80px 50px;
-            background-color: #f9f9f9;
+            background-color: #000;
         }
 
         .publications h2 {
             text-align: center;
             margin-bottom: 60px;
             font-size: 36px;
+            color: #FFA500; /* Orange color */
+            text-transform: uppercase;
         }
 
         .publication-item {
@@ -132,28 +192,61 @@
         .publication-item h3 {
             font-size: 24px;
             margin-bottom: 10px;
+            color: #fff;
+            text-transform: uppercase;
         }
 
         .publication-item p {
             font-size: 18px;
             margin-bottom: 5px;
+            color: #fff;
         }
 
         .publication-item a {
-            color: #007BFF;
+            color: #FFA500; /* Orange color */
             text-decoration: none;
+            text-transform: uppercase;
         }
 
         .publication-item a:hover {
             text-decoration: underline;
         }
 
+        /* Contact Section */
+        .contact {
+            padding: 60px 50px;
+            background-color: #000;
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #FFA500; /* Orange color */
+            text-transform: uppercase;
+        }
+
+        .contact p {
+            font-size: 20px;
+            color: #fff;
+        }
+
+        .contact a {
+            color: #FFA500; /* Orange color */
+            text-decoration: none;
+        }
+
+        .contact a:hover {
+            text-decoration: underline;
+        }
+
         /* Footer */
         .footer {
-            background-color: #333;
+            background-color: #000;
             color: #fff;
             padding: 40px 50px;
             text-align: center;
+            border-top: 1px solid #fff;
         }
 
         .footer p {
@@ -168,10 +261,26 @@
         }
 
         .footer .social-icons a:hover {
-            color: #007BFF;
+            color: #FFA500; /* Orange color */
         }
 
         /* Responsive Design */
+        @media (max-width: 992px) {
+            .focus-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .focus-item {
+                max-width: 100%;
+                margin-bottom: 30px;
+            }
+
+            .navbar ul {
+                gap: 20px;
+            }
+        }
+
         @media (max-width: 768px) {
             .navbar {
                 padding: 15px 20px;
@@ -189,8 +298,14 @@
                 font-size: 20px;
             }
 
-            .publications {
-                padding: 60px 20px;
+            .focus h2,
+            .publications h2,
+            .contact h2 {
+                font-size: 28px;
+            }
+
+            .focus-item h3 {
+                font-size: 20px;
             }
         }
     </style>
@@ -202,6 +317,7 @@
         <div class="logo">UASYS</div>
         <ul>
             <li><a href="#">Home</a></li>
+            <li><a href="#focus">Our Focus</a></li>
             <li><a href="#publications">Publications</a></li>
         </ul>
     </nav>
@@ -209,16 +325,41 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <h1>Ukrainian Institute for Systems Biology and Medicine</h1>
+            <h1>UKRAINIAN INSTITUTE FOR SYSTEMS BIOLOGY AND MEDICINE</h1>
             <p>Pioneering research in systems biology and novel therapeutics.</p>
-            <a href="#publications">STAY TUNED</a>
+            <a href="#publications">Stay Tuned</a>
+        </div>
+    </section>
+
+    <!-- Our Focus Section -->
+    <section id="focus" class="focus">
+        <h2>OUR FOCUS</h2>
+        <div class="focus-container">
+            <div class="focus-item">
+                <i class="fas fa-dna"></i>
+                <h3>DECIPHERING UNKNOWN PATHOMECHANISMS</h3>
+            </div>
+            <div class="focus-item">
+                <i class="fas fa-microscope"></i>
+                <h3>LINKING MULTIOMICS AND AI WITH CLINICAL PRESENTATION</h3>
+            </div>
+            <div class="focus-item">
+                <i class="fas fa-flask"></i>
+                <h3>DISCOVERING NEXT-GENERATION THERAPEUTICS</h3>
+            </div>
         </div>
     </section>
 
     <!-- Publications Section -->
     <section id="publications" class="publications">
-        <h2>Recent Publications</h2>
+        <h2>RECENT PUBLICATIONS</h2>
         <div id="publication-list"></div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact">
+        <h2>CONTACT US</h2>
+        <p>For inquiries, please email us at <a href="mailto:uasysbio@genomics.org.ua">uasysbio@genomics.org.ua</a></p>
     </section>
 
     <!-- Footer -->
@@ -261,7 +402,7 @@
                         <div class="publication-item">
                             <h3>${pubData.title[0]}</h3>
                             <p>${authors}</p>
-                            <p><em>${pubData['container-title'][0]}</em>, ${pubData.volume || ''}, ${pubData.page || ''} (${pubData['published-print']['date-parts'][0][0]}).</p>
+                            <p><em>${pubData['container-title'][0]}</em>, ${pubData.volume || ''}, ${pubData.page || ''} (${pubData['published-print'] ? pubData['published-print']['date-parts'][0][0] : pubData['published-online']['date-parts'][0][0]}).</p>
                             <a href="https://doi.org/${doi}" target="_blank">View Publication</a>
                         </div>
                     `;
