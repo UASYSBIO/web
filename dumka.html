@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DUMKA - Multiomics RA Explorer</title>
+    <!-- Include IBM Plex Sans Font -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #000000;
+            color: #FFFFFF;
+            font-family: 'IBM Plex Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* To prevent scrollbars from animated background */
+        }
+        .header {
+            text-align: center;
+            padding: 50px;
+            position: relative;
+            z-index: 1;
+        }
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 18px;
+            color: #FFA500;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            margin: 50px;
+            position: relative;
+            z-index: 1;
+        }
+        .card {
+            background-color: #1A001A;
+            width: 300px;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .card h2 {
+            color: #FFA500;
+            margin-bottom: 15px;
+        }
+        .card p {
+            margin-bottom: 20px;
+        }
+        .card button {
+            background-color: #FFA500;
+            color: #1A001A;
+            border: none;
+            padding: 15px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .card button:hover {
+            background-color: #FFC04D;
+        }
+        /* Animated Network Background */
+        #network-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Network Background Container -->
+    <div id="network-bg"></div>
+    <div class="header">
+        <h1>DUMKA</h1>
+        <p>Data Unification for Multi-Omics Knowledge in Arthritis</p>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>Knowledge Graph Search</h2>
+            <p>Find insights on genes, molecules, or drugs related to RA.</p>
+            <button>Explore Now</button>
+        </div>
+        <div class="card">
+            <h2>Upload Patient Data</h2>
+            <p>Analyze patient omics data for personalized insights and clustering with RA stage or activity</p>
+            <button>Upload Data</button>
+        </div>
+        <div class="card">
+            <h2>Experimental Models</h2>
+            <p>Input experimental data to assess clustering and involvement of RA-related pathways in your samples of interest.</p>
+            <button>Analyze Models</button>
+        </div>
+    </div>
+    <!-- Include Animated Network Script -->
+    <!-- You can use a library like particles.js for the background animation -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        /* Initialize the animated network background */
+        particlesJS("network-bg", {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#FFA500"
+                },
+                "shape": {
+                    "type": "circle"
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false
+                },
+                "size": {
+                    "value": 3,
+                    "random": true
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#FFA500",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 1,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "attract": {
+                        "enable": false
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": false
+                    },
+                    "onclick": {
+                        "enable": false
+                    },
+                    "resize": true
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+</html>
