@@ -27,7 +27,7 @@
         /* Navigation Bar */
         .navbar {
             position: fixed;
-            top: 0; /* Ensure navbar is at the very top */
+            top: 0;
             width: 100%;
             background-color: transparent;
             padding: 15px 50px;
@@ -70,7 +70,7 @@
             background-position: center 15%; /* Move field of view up by 15% */
             background-size: cover;
             position: relative;
-            margin-top: 80px;
+            /* Removed margin-top to eliminate gap */
         }
 
         .hero::after {
@@ -91,14 +91,14 @@
             max-width: 800px;
             padding: 20px;
             margin: 0 auto;
-            top: 50%;
+            top: 45%; /* Adjusted top position */
             transform: translateY(-50%);
             z-index: 2;
-            padding-top: 40px; /* Add extra padding to move content away from navbar */
+            padding-top: 60px; /* Reduced padding to bring content slightly up */
         }
 
         .hero-content h1 {
-            font-size: 48px;
+            font-size: 42px;
             margin-bottom: 20px;
             text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
             text-transform: uppercase;
@@ -112,8 +112,8 @@
         .hero-content a {
             text-decoration: none;
             padding: 15px 30px;
-            background-color: #FFA500; /* Orange color */
-            color: #000;
+            background-color: #1A001A; /* Very dark purple */
+            color: #fff; /* White text */
             border-radius: 5px;
             font-size: 18px;
             transition: background-color 0.3s;
@@ -121,12 +121,12 @@
         }
 
         .hero-content a:hover {
-            background-color: #cc8400; /* Darker orange */
+            background-color: #1A001A; /* Slightly lighter purple on hover */
         }
 
         /* Our Focus Section */
         .focus {
-            padding: 80px 50px;
+            padding: 80px 20px;
             background-color: #000;
             text-align: center;
         }
@@ -140,17 +140,19 @@
 
         .focus-container {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             flex-wrap: wrap;
             gap: 30px;
+            max-width: 1200px; /* Limit the maximum width */
+            margin: 0 auto; /* Center the container */
         }
 
         .focus-item {
-            background-color: #200039; /* Dark purple color */
-            color: #fff; /* White text */
+            background-color: #1A001A; /* Very dark purple */
+            color: #fff;
             padding: 40px 20px;
-            flex: 1 1 calc(33% - 60px);
-            max-width: calc(33% - 60px);
+            flex: 1 1 300px; /* Set a minimum width */
+            max-width: 350px; /* Limit the block width */
             box-sizing: border-box;
             border-radius: 10px;
             transition: transform 0.3s;
