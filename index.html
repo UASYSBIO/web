@@ -65,9 +65,9 @@
 
         /* Hero Section */
         .hero {
-            background-image: url("images/bg.jpg");
-            height: 400px;
-            background-position: center 15%; /* Move field of view up by 15% */
+            background-image: url("images/bg-new.webp");
+            height: 600px;
+            background-position: center 25%; /* Move field of view up by 15% */
             background-size: cover;
             position: relative;
             padding-top: 80px; /* Add padding equal to navbar height */
@@ -139,9 +139,8 @@
         }
 
         .focus-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 30px;
             max-width: 1200px;
             margin: 0 auto;
@@ -151,15 +150,15 @@
             background-color: #1A001A; /* Very dark purple */
             color: #fff;
             padding: 40px 20px;
-            flex: 1 1 300px;
-            max-width: 350px;
             box-sizing: border-box;
             border-radius: 10px;
-            transition: transform 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
         }
 
         .focus-item:hover {
             transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
         .focus-item i {
@@ -171,6 +170,57 @@
         .focus-item h3 {
             font-size: 24px;
             text-transform: uppercase;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .focus-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .navbar ul {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .focus-container {
+                grid-template-columns: 1fr;
+            }
+
+            .focus-item i {
+                font-size: 40px;
+            }
+
+            .focus-item h3 {
+                font-size: 20px;
+            }
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .navbar ul {
+                gap: 15px;
+            }
+
+            .hero-content h1 {
+                font-size: 36px;
+            }
+
+            .hero-content p {
+                font-size: 20px;
+            }
+
+            .focus h2,
+            .publications h2,
+            .contact h2 {
+                font-size: 28px;
+            }
+
+            .focus-item h3 {
+                font-size: 20px;
+            }
         }
 
         /* Publications Section */
@@ -366,7 +416,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2024 Ukrainian Institute for Systems Biology and Medicine</p>
+        <p>&copy; 2024 Ukrainian Institute for Systems Biology and Medicine. The banner image has been generated with DALL-E 2024-10 model.</p>
         <div class="social-icons">
             <a href="#"><i class="fab fa-twitter"></i></a>
             <a href="#"><i class="fab fa-facebook"></i></a>
