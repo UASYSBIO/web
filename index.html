@@ -88,19 +88,29 @@
             z-index: 1;
         }
 
+        /* Hero Content with Text Outline */
         .hero-content {
             position: relative;
             color: #fff;
             max-width: 800px;
-            padding: 20px;
+            padding: 40px; /* Increased padding for better spacing */
             margin: 0 auto;
             z-index: 2;
+        }
+
+        /* Outline for h1 and p using -webkit-text-stroke with fallback */
+        .hero-content h1,
+        .hero-content p {
+            color: #fff;
+            -webkit-text-stroke: 0.25px black;
+            text-stroke: 0.5px black;
+
         }
 
         .hero-content h1 {
             font-size: 42px;
             margin-bottom: 20px;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            text-shadow: none;
             text-transform: uppercase;
         }
 
@@ -109,6 +119,7 @@
             margin-bottom: 40px;
         }
 
+        /* Button Styles (No Outline) */
         .hero-content a {
             text-decoration: none;
             padding: 15px 30px;
@@ -123,6 +134,8 @@
         .hero-content a:hover {
             background-color: #1A001A; /* Slightly lighter purple on hover */
         }
+
+
 
         /* Our Focus Section */
         .focus {
@@ -404,7 +417,7 @@
 
     <!-- Publications Section -->
     <section id="publications" class="publications">
-        <h2>RECENT PUBLICATIONS</h2>
+        <h2>RECENT PUBLICATIONS & CONTRIBUTIONS</h2>
         <div id="publication-list"></div>
     </section>
 
