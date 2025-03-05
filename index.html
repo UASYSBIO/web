@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>Ukrainian Institute for Systems Biology and Medicine</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Include IBM Plex Sans from Google Fonts -->
+    <!-- Include IBM Plex Sans from Google Fonts with preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,700&display=swap" rel="stylesheet">
     <!-- Include Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -104,7 +106,6 @@
             color: #fff;
             -webkit-text-stroke: 0.25px black;
             text-stroke: 0.5px black;
-
         }
 
         .hero-content h1 {
@@ -134,8 +135,6 @@
         .hero-content a:hover {
             background-color: #1A001A; /* Slightly lighter purple on hover */
         }
-
-
 
         /* Our Focus Section */
         .focus {
@@ -276,6 +275,12 @@
         .publication-item a:hover {
             text-decoration: underline;
         }
+        
+        /* Publications Container */
+        .publications-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
         /* Contact Section */
         .contact {
@@ -329,7 +334,7 @@
             color: #FFA500; /* Orange color */
         }
 
-        /* Responsive Design */
+        /* Responsive Design for Footer and other elements */
         @media (max-width: 992px) {
             .focus-container {
                 flex-direction: column;
@@ -418,7 +423,9 @@
     <!-- Publications Section -->
     <section id="publications" class="publications">
         <h2>RECENT PUBLICATIONS & CONTRIBUTIONS</h2>
-        <div id="publication-list"></div>
+        <div class="publications-container">
+            <div id="publication-list"></div>
+        </div>
     </section>
 
     <!-- Contact Section -->
@@ -437,9 +444,13 @@
         </div>
     </footer>
 
-    <!-- JavaScript to Fetch Publications -->
+    <!-- JavaScript to Fetch Publications in order -->
     <script>
         const publications = [
+            {
+                doi: '10.1210/clinem/dgaf131',
+                underscoreNames: ['Oleksandr Petrenko']
+            },
             {
                 doi: '10.7124/bc.000AEE',
                 underscoreNames: ['V. V. Bashynska', 'O. O. Petrenko']
@@ -450,14 +461,25 @@
             }
         ];
 
-        function fetchPublication(doi, underscoreNames) {
-            fetch(`https://api.crossref.org/works/${encodeURIComponent(doi)}`)
+        Promise.all(publications.map((pub, index) => {
+            return fetch(`https://api.crossref.org/works/${encodeURIComponent(pub.doi)}`)
                 .then(response => response.json())
                 .then(data => {
-                    const pubData = data.message;
+                    return { index: index, message: data.message, underscoreNames: pub.underscoreNames };
+                })
+                .catch(error => {
+                    console.error('Error fetching publication:', error);
+                    return { index: index, message: null, underscoreNames: pub.underscoreNames };
+                });
+        })).then(results => {
+            // Ensure publications display in the defined order
+            results.sort((a, b) => a.index - b.index);
+            results.forEach(item => {
+                if (item.message) {
+                    const pubData = item.message;
                     const authors = pubData.author.map(author => {
                         let fullName = `${author.given} ${author.family}`;
-                        if (underscoreNames.includes(fullName)) {
+                        if (item.underscoreNames.includes(fullName)) {
                             fullName = `<u>${fullName}</u>`;
                         }
                         return fullName;
@@ -468,17 +490,12 @@
                             <h3>${pubData.title[0]}</h3>
                             <p>${authors}</p>
                             <p><em>${pubData['container-title'][0]}</em>, ${pubData.volume || ''}, ${pubData.page || ''} (${pubData['published-print'] ? pubData['published-print']['date-parts'][0][0] : pubData['published-online']['date-parts'][0][0]}).</p>
-                            <a href="https://doi.org/${doi}" target="_blank">View Publication</a>
+                            <a href="https://doi.org/${publications[item.index].doi}" target="_blank">View Publication</a>
                         </div>
                     `;
-
                     document.getElementById('publication-list').innerHTML += publicationHTML;
-                })
-                .catch(error => console.error('Error fetching publication:', error));
-        }
-
-        publications.forEach(pub => {
-            fetchPublication(pub.doi, pub.underscoreNames);
+                }
+            });
         });
     </script>
 
