@@ -447,61 +447,88 @@
     <!-- JavaScript to Fetch Publications in order -->
     <script>
         const publications = [
-            {
-                doi: '10.1101/2025.03.15.643421',
-                underscoreNames: ['Oleksandr Petrenko']
-            },
-            {
-                doi: '10.1210/clinem/dgaf131',
-                underscoreNames: ['Oleksandr Petrenko']
-            },
-            {
-                doi: '10.7124/bc.000AEE',
-                underscoreNames: ['V. V. Bashynska', 'O. O. Petrenko']
-            },
-            {
-                doi: '10.1016/j.cels.2024.03.006',
-                underscoreNames: ['Oleksandr Petrenko']
-            }
+          {
+            doi: '10.1101/2025.03.15.643421',
+            underscoreNames: ['Oleksandr Petrenko']
+          },
+          {
+            doi: '10.1210/clinem/dgaf131',
+            underscoreNames: ['Oleksandr Petrenko']
+          },
+          {
+            doi: '10.7124/bc.000AEE',
+            underscoreNames: ['V. V. Bashynska', 'O. O. Petrenko']
+          },
+          {
+            doi: '10.1016/j.cels.2024.03.006',
+            underscoreNames: ['Oleksandr Petrenko']
+          }
         ];
-
+    
         Promise.all(publications.map((pub, index) => {
-            return fetch(`https://api.crossref.org/works/${encodeURIComponent(pub.doi)}`)
-                .then(response => response.json())
-                .then(data => {
-                    return { index: index, message: data.message, underscoreNames: pub.underscoreNames };
-                })
-                .catch(error => {
-                    console.error('Error fetching publication:', error);
-                    return { index: index, message: null, underscoreNames: pub.underscoreNames };
-                });
-        })).then(results => {
-            // Ensure publications display in the defined order
-            results.sort((a, b) => a.index - b.index);
-            results.forEach(item => {
-                if (item.message) {
-                    const pubData = item.message;
-                    const authors = pubData.author.map(author => {
-                        let fullName = `${author.given} ${author.family}`;
-                        if (item.underscoreNames.includes(fullName)) {
-                            fullName = `<u>${fullName}</u>`;
-                        }
-                        return fullName;
-                    }).join(', ');
-
-                    const publicationHTML = `
-                        <div class="publication-item">
-                            <h3>${pubData.title[0]}</h3>
-                            <p>${authors}</p>
-                            <p><em>${pubData['container-title'][0]}</em>, ${pubData.volume || ''}, ${pubData.page || ''} (${pubData['published-print'] ? pubData['published-print']['date-parts'][0][0] : pubData['published-online']['date-parts'][0][0]}).</p>
-                            <a href="https://doi.org/${publications[item.index].doi}" target="_blank">View Publication</a>
-                        </div>
-                    `;
-                    document.getElementById('publication-list').innerHTML += publicationHTML;
-                }
+          return fetch(`https://api.crossref.org/works/${encodeURIComponent(pub.doi)}`)
+            .then(response => response.json())
+            .then(data => {
+              return { index: index, message: data.message, underscoreNames: pub.underscoreNames };
+            })
+            .catch(error => {
+              console.error('Error fetching publication:', error);
+              return { index: index, message: null, underscoreNames: pub.underscoreNames };
             });
+        })).then(results => {
+          // Ensure publications display in the defined order
+          results.sort((a, b) => a.index - b.index);
+          results.forEach(item => {
+            if (item.message && item.message.author) {
+              const pubData = item.message;
+              const authors = pubData.author.map(author => {
+                let fullName = `${author.given} ${author.family}`;
+                if (item.underscoreNames.includes(fullName)) {
+                  fullName = `<u>${fullName}</u>`;
+                }
+                return fullName;
+              }).join(', ');
+    
+              // Fallback for container title if missing (e.g., for bioRxiv)
+              const containerTitle = (pubData['container-title'] && pubData['container-title'][0]) || 'bioRxiv';
+    
+              // Determine publication year using multiple potential fields
+              let publicationYear = 'Unknown';
+              if (pubData['published-print'] && pubData['published-print']['date-parts'] &&
+                  pubData['published-print']['date-parts'][0] &&
+                  pubData['published-print']['date-parts'][0][0]) {
+                publicationYear = pubData['published-print']['date-parts'][0][0];
+              } else if (pubData['published-online'] && pubData['published-online']['date-parts'] &&
+                         pubData['published-online']['date-parts'][0] &&
+                         pubData['published-online']['date-parts'][0][0]) {
+                publicationYear = pubData['published-online']['date-parts'][0][0];
+              } else if (pubData.issued && pubData.issued['date-parts'] &&
+                         pubData.issued['date-parts'][0] &&
+                         pubData.issued['date-parts'][0][0]) {
+                publicationYear = pubData.issued['date-parts'][0][0];
+              }
+    
+              // Build a details array for volume, page, and year. Only add non-empty values.
+              let details = [];
+              if(pubData.volume) details.push(pubData.volume);
+              if(pubData.page) details.push(pubData.page);
+              if(publicationYear && publicationYear !== 'Unknown') details.push(publicationYear);
+              let detailsStr = details.join(', ');
+    
+              const publicationHTML = `
+                <div class="publication-item">
+                  <h3>${pubData.title[0]}</h3>
+                  <p>${authors}</p>
+                  <p><em>${containerTitle}</em>${detailsStr ? ', ' + detailsStr : ''}.</p>
+                  <a href="https://doi.org/${publications[item.index].doi}" target="_blank">View Publication</a>
+                </div>
+              `;
+              document.getElementById('publication-list').innerHTML += publicationHTML;
+            } else {
+              console.error('Publication data incomplete for DOI: ' + publications[item.index].doi);
+            }
+          });
         });
-    </script>
-
+      </script>
 </body>
 </html>
