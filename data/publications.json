@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-02-04T19:37:55.756Z",
+  "generatedAt": "2026-02-04T19:53:12.048Z",
   "affiliation": "Ukrainian Institute for Systems Biology and Medicine",
-  "query": "AFF:\"Ukrainian Institute for Systems Biology and Medicine\" OR AFF:(Ukrainian AND Institute AND Systems AND Biology AND Medicine*) OR \"Ukrainian Institute for Systems Biology and Medicine\"",
+  "query": "(AFF:\"Ukrainian Institute for Systems Biology and Medicine\" OR AFF:(Ukrainian* AND Institute* AND Systems* AND Biology* AND Medicine*) OR AFF:(Ukrainian AND Institute AND Systems AND Biology AND Medicine*) OR \"Ukrainian Institute for Systems Biology and Medicine\")",
   "count": 10,
   "items": [
     {
