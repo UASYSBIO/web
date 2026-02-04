@@ -1,8 +1,15 @@
 {
-  "generatedAt": "2026-02-04T19:59:43.166Z",
+  "generatedAt": "2026-02-04T20:24:54.234Z",
   "affiliation": "Ukrainian Institute for Systems Biology and Medicine",
   "query": "(AFF:\"Ukrainian Institute for Systems Biology and Medicine\" OR AFF:(Ukrainian* AND Institute* AND Systems* AND Biology* AND Medicine*) OR AFF:(Ukrainian AND Institute AND Systems AND Biology AND Medicine*))",
-  "count": 3,
+  "count": 6,
+  "sources": {
+    "europePmc": 3,
+    "crossref": 0,
+    "openAlex": 0,
+    "manual": 4,
+    "openAlexIds": []
+  },
   "items": [
     {
       "id": "PMID:41551411",
@@ -38,7 +45,10 @@
       "date": "2025-10-17",
       "doi": "10.1016/j.jhepr.2025.101642",
       "pmid": "41551411",
-      "url": "https://doi.org/10.1016/j.jhepr.2025.101642"
+      "url": "https://doi.org/10.1016/j.jhepr.2025.101642",
+      "sources": [
+        "EuropePMC"
+      ]
     },
     {
       "id": "PMID:41052886",
@@ -93,14 +103,41 @@
       "date": "2025-10-05",
       "doi": "10.1136/jitc-2024-010975",
       "pmid": "41052886",
-      "url": "https://doi.org/10.1136/jitc-2024-010975"
+      "url": "https://doi.org/10.1136/jitc-2024-010975",
+      "sources": [
+        "EuropePMC"
+      ]
     },
     {
-      "id": "PMID:40037526",
-      "source": "PubMed",
-      "type": null,
-      "title": "Lipid Dysregulation in Tangier Disease: A Case Series and Metabolic Characterization.",
+      "id": "DOI:10.1210/clinem/dgaf131",
+      "source": "Manual",
+      "sources": [
+        "Manual",
+        "EuropePMC"
+      ],
+      "type": "journal-article",
+      "title": "Lipid Dysregulation in Tangier Disease: A Case Series and Metabolic Characterization",
       "authors": [
+        "Georg Semmler",
+        "Clemens Baumgartner",
+        "Matthäus Metz",
+        "Sophie Gensluckner",
+        "Hansjörg Habisch",
+        "Hannah Hofer",
+        "Winfried März",
+        "Felix Offner",
+        "Andreas Völkerer",
+        "Oleksandr Petrenko",
+        "Bernhard Wernly",
+        "Sophie Draxler-Dworzak",
+        "Manuela Neyer",
+        "Charlotte Nigmann",
+        "Susanne Greber-Platzer",
+        "Harald Esterbauer",
+        "Tobias Madl",
+        "Elmar Aigner",
+        "Thomas Scherer",
+        "Christian Datz",
         "Semmler G",
         "Baumgartner C",
         "Metz M",
@@ -122,12 +159,97 @@
         "Scherer T",
         "Datz C"
       ],
-      "venue": null,
+      "venue": "The Journal of Clinical Endocrinology &amp; Metabolism",
       "year": 2025,
-      "date": "2025-06-01",
+      "date": "2025-06-17",
       "doi": "10.1210/clinem/dgaf131",
       "pmid": "40037526",
       "url": "https://doi.org/10.1210/clinem/dgaf131"
+    },
+    {
+      "id": "DOI:10.1101/2025.03.15.643421",
+      "source": "Manual",
+      "type": "posted-content",
+      "title": "Spatial single-cell interactome and niche-specific molecular signatures in alcohol-related liver disease",
+      "authors": [
+        "Oleksandr Petrenko",
+        "Thomas Sorz-Nechay",
+        "Martin Bilban",
+        "Sophia Derdak",
+        "Lukas Van Melkebeke",
+        "Wenxin Huang",
+        "Jef Verbeek",
+        "Schalk van der Merwe",
+        "Benedikt S Hofer",
+        "Benedikt Simbrunner",
+        "Thomas Reiberger",
+        "Tim Hendrikx"
+      ],
+      "year": 2025,
+      "date": "2025-03-17",
+      "doi": "10.1101/2025.03.15.643421",
+      "pmid": null,
+      "url": "https://doi.org/10.1101/2025.03.15.643421",
+      "sources": [
+        "Manual"
+      ]
+    },
+    {
+      "id": "DOI:10.7124/bc.000aee",
+      "source": "Manual",
+      "type": "journal-article",
+      "title": "Network analysis identified novel disease module in rheumatoid arthritis",
+      "authors": [
+        "V. V. Bashynska",
+        "P. Fau",
+        "A. S. Romanenko",
+        "A. O. Kompaniiets",
+        "P. V. Havrysh",
+        "M. V. Mykhailichenko",
+        "D. O. Nishchenko",
+        "N. M. Kasianchuk",
+        "F. Iordachi",
+        "O. O. Petrenko"
+      ],
+      "venue": "Biopolymers and Cell",
+      "year": 2024,
+      "date": "2024-09-10",
+      "doi": "10.7124/bc.000aee",
+      "pmid": null,
+      "url": "https://doi.org/10.7124/bc.000aee",
+      "sources": [
+        "Manual"
+      ]
+    },
+    {
+      "id": "DOI:10.1016/j.cels.2024.03.006",
+      "source": "Manual",
+      "type": "journal-article",
+      "title": "The resilience of Ukrainian scientists",
+      "authors": [
+        "Oksana Piven",
+        "Valerii Pokrytiuk",
+        "Nadiia Kasianchuk",
+        "Bohdan Ostash",
+        "Svitlana Dekina",
+        "Rostyslav Panchuk",
+        "Oleksiy Boldyriev",
+        "Vitalina Bashynska",
+        "Andrii Zaremba",
+        "Yuliia Faidiuk",
+        "Maria Yu Obolenskaya",
+        "Anastasiia Polishchuk",
+        "Oleksandr Petrenko"
+      ],
+      "venue": "Cell Systems",
+      "year": 2024,
+      "date": "2024-04-01",
+      "doi": "10.1016/j.cels.2024.03.006",
+      "pmid": null,
+      "url": "https://doi.org/10.1016/j.cels.2024.03.006",
+      "sources": [
+        "Manual"
+      ]
     }
   ]
 }
