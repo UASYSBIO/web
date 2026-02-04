@@ -19,10 +19,18 @@
             padding: 0;
         }
 
+        :root {
+            --accent: #00b3a4;
+            --bg: #0b0f14;
+            --text: #e5e7eb;
+            --card: #121825;
+            --border: #1f2937;
+        }
+
         body, html {
             font-family: 'IBM Plex Sans', sans-serif;
-            color: #fff;
-            background-color: #000;
+            color: var(--text);
+            background-color: var(--bg);
             scroll-behavior: smooth;
         }
 
@@ -31,24 +39,25 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background-color: transparent;
+            background-color: rgba(11, 15, 20, 0.45);
             padding: 15px 50px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 1000;
-            border-bottom: 1px solid #fff;
+            border-bottom: 1px solid var(--border);
             transition: background-color 0.3s;
+            backdrop-filter: blur(10px);
         }
 
         .navbar.scrolled {
-            background-color: #000;
+            background-color: rgba(11, 15, 20, 0.95);
         }
 
         .navbar .logo {
             font-size: 24px;
             font-weight: bold;
-            color: #fff;
+            color: var(--text);
             text-transform: uppercase;
         }
 
@@ -60,19 +69,19 @@
 
         .navbar ul li a {
             text-decoration: none;
-            color: #fff;
+            color: var(--text);
             font-weight: 500;
             transition: color 0.3s;
             text-transform: uppercase;
         }
 
         .navbar ul li a:hover {
-            color: #FFA500; /* Orange color */
+            color: var(--accent);
         }
 
         /* Hero Section */
         .hero {
-            background-image: url("images/bg-new.webp");
+            background-image: radial-gradient(circle at top, rgba(0, 179, 164, 0.25), rgba(0, 0, 0, 0.85)), url("images/bg-new.webp");
             height: 600px;
             background-position: center 25%; /* Move field of view up by 15% */
             background-size: cover;
@@ -91,14 +100,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(8, 12, 18, 0.6);
             z-index: 1;
         }
 
         /* Hero Content with Text Outline */
         .hero-content {
             position: relative;
-            color: #fff;
+            color: var(--text);
             max-width: 800px;
             padding: 40px; /* Increased padding for better spacing */
             margin: 0 auto;
@@ -108,9 +117,9 @@
         /* Outline for h1 and p using -webkit-text-stroke with fallback */
         .hero-content h1,
         .hero-content p {
-            color: #fff;
-            -webkit-text-stroke: 0.25px black;
-            text-stroke: 0.5px black;
+            color: var(--text);
+            -webkit-text-stroke: 0;
+            text-stroke: 0;
         }
 
         .hero-content h1 {
@@ -129,8 +138,8 @@
         .hero-content a {
             text-decoration: none;
             padding: 15px 30px;
-            background-color: #1A001A; /* Very dark purple */
-            color: #fff; /* White text */
+            background-color: var(--accent);
+            color: #00100d;
             border-radius: 5px;
             font-size: 18px;
             transition: background-color 0.3s;
@@ -138,20 +147,20 @@
         }
 
         .hero-content a:hover {
-            background-color: #1A001A; /* Slightly lighter purple on hover */
+            background-color: #00e0cf;
         }
 
         /* Our Focus Section */
         .focus {
             padding: 80px 20px;
-            background-color: #000;
+            background-color: var(--bg);
             text-align: center;
         }
 
         .focus h2 {
             font-size: 36px;
             margin-bottom: 60px;
-            color: #FFA500; /* Orange color */
+            color: var(--accent);
             text-transform: uppercase;
         }
 
@@ -164,13 +173,14 @@
         }
 
         .focus-item {
-            background-color: #1A001A; /* Very dark purple */
-            color: #fff;
+            background-color: var(--card);
+            color: var(--text);
             padding: 40px 20px;
             box-sizing: border-box;
             border-radius: 10px;
             transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
+            border: 1px solid var(--border);
         }
 
         .focus-item:hover {
@@ -181,7 +191,7 @@
         .focus-item i {
             font-size: 50px;
             margin-bottom: 20px;
-            color: #FFA500; /* Orange color */
+            color: var(--accent);
         }
 
         .focus-item h3 {
@@ -243,36 +253,41 @@
         /* Publications Section */
         .publications {
             padding: 80px 50px;
-            background-color: #000;
+            background-color: var(--bg);
         }
 
         .publications h2 {
             text-align: center;
             margin-bottom: 60px;
             font-size: 36px;
-            color: #FFA500; /* Orange color */
+            color: var(--accent);
             text-transform: uppercase;
         }
 
         .publication-item {
             margin-bottom: 40px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
         }
 
         .publication-item h3 {
             font-size: 24px;
             margin-bottom: 10px;
-            color: #fff;
+            color: var(--text);
             text-transform: uppercase;
         }
 
         .publication-item p {
             font-size: 18px;
             margin-bottom: 5px;
-            color: #fff;
+            color: var(--text);
         }
 
         .publication-item a {
-            color: #FFA500; /* Orange color */
+            color: var(--accent);
             text-decoration: none;
             text-transform: uppercase;
         }
@@ -291,30 +306,30 @@
             max-width: 1200px;
             margin: 0 auto 20px auto;
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(229, 231, 235, 0.7);
         }
 
         /* Contact Section */
         .contact {
             padding: 60px 50px;
-            background-color: #000;
+            background-color: var(--bg);
             text-align: center;
         }
 
         .contact h2 {
             font-size: 36px;
             margin-bottom: 20px;
-            color: #FFA500; /* Orange color */
+            color: var(--accent);
             text-transform: uppercase;
         }
 
         .contact p {
             font-size: 20px;
-            color: #fff;
+            color: var(--text);
         }
 
         .contact a {
-            color: #FFA500; /* Orange color */
+            color: var(--accent);
             text-decoration: none;
         }
 
@@ -324,11 +339,11 @@
 
         /* Footer */
         .footer {
-            background-color: #000;
-            color: #fff;
+            background-color: #0b0f14;
+            color: var(--text);
             padding: 40px 50px;
             text-align: center;
-            border-top: 1px solid #fff;
+            border-top: 1px solid var(--border);
         }
 
         .footer p {
@@ -588,46 +603,12 @@
           }
         }
 
-        // Temporary fallback: keep existing behavior if repo-backed list is not populated yet.
-        const legacyDois = [
-          '10.1101/2025.03.15.643421',
-          '10.1210/clinem/dgaf131',
-          '10.7124/bc.000AEE',
-          '10.1016/j.cels.2024.03.006'
-        ];
-
-        async function loadLegacyCrossref() {
-          const results = await Promise.all(legacyDois.map(async (doi) => {
-            try {
-              const response = await fetch(`https://api.crossref.org/works/${encodeURIComponent(doi)}`);
-              const data = await response.json();
-              const msg = data && data.message ? data.message : null;
-              if (!msg) return null;
-              const authors = Array.isArray(msg.author)
-                ? msg.author.map(a => `${a.given || ''} ${a.family || ''}`.trim()).filter(Boolean)
-                : [];
-              const venue = (msg['container-title'] && msg['container-title'][0]) || 'Publication';
-              const year =
-                (msg.issued && msg.issued['date-parts'] && msg.issued['date-parts'][0] && msg.issued['date-parts'][0][0]) ||
-                null;
-              return {
-                title: (msg.title && msg.title[0]) || doi,
-                authors,
-                venue,
-                year,
-                source: venue.toLowerCase().includes('biorxiv') ? 'bioRxiv' : '',
-                url: `https://doi.org/${doi}`
-              };
-            } catch (e) {
-              console.error('Error fetching legacy publication from Crossref:', doi, e);
-              return null;
-            }
-          }));
-          return results.filter(Boolean);
-        }
-
         (async () => {
           try {
+            if (window.location.protocol === 'file:') {
+              elStatus.innerHTML = 'Local preview detected. Run a local server (e.g. `python -m http.server`) to load publications.';
+              return;
+            }
             const [data, highlightNames] = await Promise.all([loadRepoPublications(), loadHighlightNames()]);
             const highlightSet = buildHighlightSet(highlightNames);
             if (data.generatedAt) {
@@ -638,9 +619,8 @@
             }
 
             if (data.items.length === 0) {
-              elStatus.innerHTML += ' No items found yet; showing a temporary list.';
-              const legacy = await loadLegacyCrossref();
-              elList.innerHTML = legacy.map((item) => renderItem(item, highlightSet)).join('');
+              elStatus.innerHTML += ' No items found yet.';
+              elList.innerHTML = '';
               return;
             }
 
@@ -648,9 +628,8 @@
           } catch (err) {
             console.error(err);
             const message = err && err.message ? err.message : 'Unknown error';
-            elStatus.innerHTML = `Unable to load the publications list (${escapeHtml(message)}). Showing a temporary list.`;
-            const legacy = await loadLegacyCrossref();
-            elList.innerHTML = legacy.map((item) => renderItem(item, buildHighlightSet(['Petrenko', 'Bashynska']))).join('');
+            elStatus.innerHTML = `Unable to load the publications list (${escapeHtml(message)}).`;
+            elList.innerHTML = '';
           }
         })();
       </script>
