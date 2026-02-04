@@ -50,6 +50,8 @@ jobs:
           # Optional: include common variants, one per line or separated by "|"
           # AFFILIATION_ALIASES: |
           #   Ukrainian Institute for Systems Biology and Medicine, Kyiv, Ukraine
+          # Ensure only records that actually contain the phrase in affiliation are kept.
+          STRICT_AFFILIATION: "true"
           OUTFILE: data/publications.json
         run: node scripts/update-publications.mjs
 

@@ -3,6 +3,7 @@ import path from "node:path";
 
 const DEFAULT_AFFILIATION = "Ukrainian Institute for Systems Biology and Medicine";
 const DEFAULT_OUTFILE = "data/publications.json";
+const DEFAULT_STRICT_AFFILIATION = true;
 
 function uniqStrings(values) {
   const out = [];
@@ -21,6 +22,55 @@ function uniqStrings(values) {
 function parseAffiliationAliases(value) {
   if (!value) return [];
   return uniqStrings(String(value).split(/[|\n]/g).map((s) => s.trim()));
+}
+
+function normalizeTextForMatch(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replaceAll(/[\u2010-\u2015]/g, "-")
+    .replaceAll(/[^a-z0-9]+/g, " ")
+    .replaceAll(/\s+/g, " ")
+    .trim();
+}
+
+function collectAffiliations(raw) {
+  const values = [];
+
+  // Observed/common Europe PMC JSON shapes vary; keep this intentionally defensive.
+  if (typeof raw.affiliation === "string") values.push(raw.affiliation);
+  if (typeof raw.authorAffiliation === "string") values.push(raw.authorAffiliation);
+
+  const details = raw?.authorAffiliationDetailsList?.authorAffiliation;
+  if (Array.isArray(details)) {
+    for (const d of details) {
+      if (typeof d?.affiliation === "string") values.push(d.affiliation);
+      if (Array.isArray(d?.affiliation)) values.push(...d.affiliation.filter((x) => typeof x === "string"));
+    }
+  }
+
+  const authors = raw?.authorList?.author;
+  if (Array.isArray(authors)) {
+    for (const a of authors) {
+      if (typeof a?.affiliation === "string") values.push(a.affiliation);
+      const aDetails = a?.authorAffiliationDetailsList?.authorAffiliation;
+      if (Array.isArray(aDetails)) {
+        for (const d of aDetails) {
+          if (typeof d?.affiliation === "string") values.push(d.affiliation);
+        }
+      }
+    }
+  }
+
+  return uniqStrings(values);
+}
+
+function matchesAffiliationPhrases(raw, phrasesNormalized) {
+  const affiliations = collectAffiliations(raw);
+  if (affiliations.length === 0) return { hasAffiliations: false, matched: false };
+
+  const affNorm = affiliations.map(normalizeTextForMatch);
+  const matched = affNorm.some((a) => phrasesNormalized.some((p) => a.includes(p)));
+  return { hasAffiliations: true, matched };
 }
 
 function toIsoDate(dateLike) {
@@ -102,7 +152,8 @@ function buildAffiliationQuery(affiliation) {
   // Even looser fallback: wildcard every significant token.
   const allTokensWildcard = tokens.length ? `AFF:(${tokens.map((t) => `${t}*`).join(" AND ")})` : null;
 
-  const parts = [`AFF:"${q}"`, `"${q}"`];
+  // Keep the query strictly within AFF to avoid pulling in unrelated records that match generic tokens elsewhere.
+  const parts = [`AFF:"${q}"`];
   if (tokenQuery) parts.splice(1, 0, tokenQuery);
   if (allTokensWildcard) parts.splice(1, 0, allTokensWildcard);
   return parts.join(" OR ");
@@ -167,6 +218,10 @@ async function main() {
   const affiliation = process.env.AFFILIATION || DEFAULT_AFFILIATION;
   const affiliationAliases = parseAffiliationAliases(process.env.AFFILIATION_ALIASES);
   const outFile = process.env.OUTFILE || DEFAULT_OUTFILE;
+  const strictAffiliation =
+    process.env.STRICT_AFFILIATION != null
+      ? String(process.env.STRICT_AFFILIATION).toLowerCase() === "true"
+      : DEFAULT_STRICT_AFFILIATION;
 
   const previous = await readPrevious(outFile);
 
@@ -189,7 +244,15 @@ async function main() {
     throw err;
   }
 
-  const filtered = results.filter(isWantedSource);
+  const phrasesNormalized = uniqStrings([affiliation, ...affiliationAliases]).map(normalizeTextForMatch);
+
+  const filtered = results.filter((r) => {
+    if (!isWantedSource(r)) return false;
+
+    const { hasAffiliations, matched } = matchesAffiliationPhrases(r, phrasesNormalized);
+    if (strictAffiliation) return hasAffiliations && matched;
+    return matched || hasAffiliations === false;
+  });
   const items = filtered
     .map(normalizeItem)
     .filter((x) => x.title && x.url)

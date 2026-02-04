@@ -6,6 +6,7 @@
 - Updater: `scripts/update-publications.mjs` (queries Europe PMC for items with the affiliation string `Ukrainian Institute for Systems Biology and Medicine`, then keeps PubMed articles + bioRxiv preprints).
 - Matching: uses both an exact phrase query and a tokenized query that wildcards the last term (to catch affiliations like `... Medicine, <something>`).
 - Tuning: set `AFFILIATION_ALIASES` (variants separated by `|` or newlines) or `QUERY` (advanced; overrides everything) in the workflow env if your institute appears under other spellings.
+- Filtering: by default (`STRICT_AFFILIATION=true`), results are kept only if the returned record contains the phrase within its affiliation fields (prevents unrelated false positives).
 - Automation: `.github/workflows/update-publications.yml` runs daily and commits updates to `data/publications.json`.
 
 If the workflow cannot push commits, enable repo settings for Actions to have read/write permissions for `GITHUB_TOKEN`.
