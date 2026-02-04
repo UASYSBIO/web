@@ -4,6 +4,25 @@ import path from "node:path";
 const DEFAULT_AFFILIATION = "Ukrainian Institute for Systems Biology and Medicine";
 const DEFAULT_OUTFILE = "data/publications.json";
 
+function uniqStrings(values) {
+  const out = [];
+  const seen = new Set();
+  for (const v of values) {
+    const s = String(v || "").trim();
+    if (!s) continue;
+    const key = s.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(s);
+  }
+  return out;
+}
+
+function parseAffiliationAliases(value) {
+  if (!value) return [];
+  return uniqStrings(String(value).split(/[|\n]/g).map((s) => s.trim()));
+}
+
 function toIsoDate(dateLike) {
   if (!dateLike) return null;
   // Europe PMC typically returns YYYY-MM-DD; keep only date portion.
@@ -57,7 +76,7 @@ async function fetchJson(url) {
   return res.json();
 }
 
-function buildQuery(affiliation) {
+function buildAffiliationQuery(affiliation) {
   const q = affiliation.replaceAll('"', '\\"');
 
   // Prefer affiliation field, but keep a fallback phrase search in case of incomplete indexing.
@@ -80,22 +99,30 @@ function buildQuery(affiliation) {
     tokenQuery = `AFF:${tokens[0]}*`;
   }
 
+  // Even looser fallback: wildcard every significant token.
+  const allTokensWildcard = tokens.length ? `AFF:(${tokens.map((t) => `${t}*`).join(" AND ")})` : null;
+
   const parts = [`AFF:"${q}"`, `"${q}"`];
   if (tokenQuery) parts.splice(1, 0, tokenQuery);
+  if (allTokensWildcard) parts.splice(1, 0, allTokensWildcard);
   return parts.join(" OR ");
 }
 
 function isWantedSource(item) {
   if (item.source === "MED") return true; // PubMed
   if (item.source === "PPR") {
-    const title = (item.journalTitle || "").toLowerCase();
-    return title.includes("biorxiv");
+    const journalTitle = (item.journalTitle || "").toLowerCase();
+    const doi = String(item.doi || "").toLowerCase();
+
+    // Europe PMC preprints commonly use 10.1101 DOIs (bioRxiv/medRxiv). If journalTitle is missing,
+    // use the DOI prefix as a pragmatic fallback so bioRxiv items don't get dropped.
+    if (doi.startsWith("10.1101/")) return true;
+    return journalTitle.includes("biorxiv");
   }
   return false;
 }
 
-async function searchEuropePmc({ affiliation, pageSize = 1000, maxPages = 10 }) {
-  const query = buildQuery(affiliation);
+async function searchEuropePmc({ query, pageSize = 1000, maxPages = 10 }) {
   const base = "https://www.ebi.ac.uk/europepmc/webservices/rest/search";
 
   let cursorMark = "*";
@@ -138,6 +165,7 @@ async function readPrevious(outFile) {
 
 async function main() {
   const affiliation = process.env.AFFILIATION || DEFAULT_AFFILIATION;
+  const affiliationAliases = parseAffiliationAliases(process.env.AFFILIATION_ALIASES);
   const outFile = process.env.OUTFILE || DEFAULT_OUTFILE;
 
   const previous = await readPrevious(outFile);
@@ -145,7 +173,13 @@ async function main() {
   let query;
   let results;
   try {
-    ({ query, results } = await searchEuropePmc({ affiliation }));
+    query =
+      (process.env.QUERY && String(process.env.QUERY).trim()) ||
+      uniqStrings([affiliation, ...affiliationAliases])
+        .map((a) => `(${buildAffiliationQuery(a)})`)
+        .join(" OR ");
+
+    ({ results } = await searchEuropePmc({ query }));
   } catch (err) {
     if (previous) {
       console.error(`Failed to fetch Europe PMC; keeping existing ${outFile}.`);

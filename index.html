@@ -537,22 +537,22 @@
           return results.filter(Boolean);
         }
 
-        (async () => {
-          try {
-            const data = await loadRepoPublications();
-            if (data.generatedAt) {
-              const dateStr = escapeHtml(new Date(data.generatedAt).toLocaleString());
-              elStatus.innerHTML = `Auto-updated daily. Last update: ${dateStr}.`;
-            } else {
-              elStatus.innerHTML = 'Auto-updated daily.';
-            }
+	        (async () => {
+	          try {
+	            const data = await loadRepoPublications();
+	            if (data.generatedAt) {
+	              const dateStr = escapeHtml(new Date(data.generatedAt).toLocaleString());
+	              elStatus.innerHTML = `Auto-updated daily. Last update: ${dateStr}.`;
+	            } else {
+	              elStatus.innerHTML = 'Auto-update pending (data file not generated yet).';
+	            }
 
-            if (data.items.length === 0) {
-              elStatus.innerHTML += ' No items found yet; showing a temporary list.';
-              const legacy = await loadLegacyCrossref();
-              elList.innerHTML = legacy.map(renderItem).join('');
-              return;
-            }
+	            if (data.items.length === 0) {
+	              elStatus.innerHTML += ' No items found yet; showing a temporary list.';
+	              const legacy = await loadLegacyCrossref();
+	              elList.innerHTML = legacy.map(renderItem).join('');
+	              return;
+	            }
 
             elList.innerHTML = data.items.map(renderItem).join('');
           } catch (err) {

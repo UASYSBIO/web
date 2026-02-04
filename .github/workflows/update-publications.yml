@@ -47,6 +47,9 @@ jobs:
       - name: Update data/publications.json
         env:
           AFFILIATION: Ukrainian Institute for Systems Biology and Medicine
+          # Optional: include common variants, one per line or separated by "|"
+          # AFFILIATION_ALIASES: |
+          #   Ukrainian Institute for Systems Biology and Medicine, Kyiv, Ukraine
           OUTFILE: data/publications.json
         run: node scripts/update-publications.mjs
 
