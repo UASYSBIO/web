@@ -178,20 +178,6 @@
       "url": "https://doi.org/10.1210/clinem/dgaf131"
     },
     {
-      "title": "Genetic aspects of the development of overweight",
-      "authors": [
-        "O.Yu Mykhaylenko",
-        "V. Bashynska",
-        "O.T. Yelizarova",
-        "O.P. Rudnytska"
-      ],
-      "venue": "Environment & Health",
-      "year": 2025,
-      "date": "2025-04-01",
-      "doi": "10.32402/dovkil2025.01.011",
-      "url": "https://doi.org/10.32402/dovkil2025.01.011"
-    },
-    {
       "title": "Spatial single-cell interactome and niche-specific molecular signatures in alcohol-related liver disease",
       "authors": [
         "Oleksandr Petrenko",
@@ -284,45 +270,24 @@
       "url": "https://doi.org/10.1016/j.cels.2024.03.006"
     },
     {
-      "title": "268 Single-cell analysis of skin pre-cancerous and cancerous lesions reveals differences in their metabolic profile and immune cell types",
-      "authors": [
-        "L. Dousset",
-        "V. Bashynska",
-        "J. Guegan",
-        "B. Fanny",
-        "M. Saleh",
-        "M. Beylot-Barry",
-        "M. Nikolski",
-        "H. Rezvani"
-      ],
-      "venue": "Journal of Investigative Dermatology",
-      "year": 2023,
-      "date": "2023-05-01",
-      "doi": "10.1016/j.jid.2023.03.272",
-      "url": "https://doi.org/10.1016/j.jid.2023.03.272"
-    },
-    {
-      "title": "Study of genetic features of patients with gluten-sensitive diseases in Ukraine",
-      "authors": [
-        "O. Yu. Gubska",
-        "A. A. Kuzminets",
-        "V. V. Bashynska",
-        "V. V. Moseiko",
-        "O. A. Dolko",
-        "Ya. S. Zaplatnikov",
-        "Yu. G. Borysovych",
-        "O. O. Zahorodnia",
-        "O. K. Koliada",
-        "O. O. Naumova"
-      ],
-      "venue": "Modern Gastroenterology",
-      "year": 2020,
-      "date": "2020-02-29",
-      "doi": "10.30978/mg-2020-2-18",
-      "url": "https://doi.org/10.30978/mg-2020-2-18"
-    },
-    {
       "title": "Time-resolved liver fibrosis regression at single-cell resolution in a murine CCl4-cessation model",
+      "authors": [
+        "Katharina Bonitz",
+        "Thomas Sorz-Nechay",
+        "Henriette Horstmeier",
+        "Vlad Taru",
+        "Oleksandr Petrenko",
+        "Benedikt Hofer",
+        "Benedikt Simbrunner",
+        "Kerstin Zinober",
+        "Hubert Scharnagl",
+        "Michael Trauner",
+        "Stefan Günther Kauschke",
+        "Peng Sun",
+        "Eric Simon",
+        "Philipp Schwabl",
+        "Thomas Reiberger"
+      ],
       "source": "Poster",
       "venue": "EASL 2025",
       "year": 2025,
