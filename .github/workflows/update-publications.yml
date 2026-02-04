@@ -56,8 +56,10 @@ jobs:
           # OPENALEX_INSTITUTION_ID: I1234567890
           # Optional: Crossref/OpenAlex contact email.
           # MAILTO: uasysbio@genomics.org.ua
-          # Optional: manual file override.
-          # MANUAL_FILE: data/publications.manual.json
+          # Optional: DOI list file override.
+          # DOI_FILE: data/publications.dois.txt
+          # Optional: non-DOI records file override (posters, etc).
+          # RECORDS_FILE: data/publications.records.json
           OUTFILE: data/publications.json
         run: node scripts/update-publications.mjs
 

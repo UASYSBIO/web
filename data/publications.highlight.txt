@@ -1,0 +1,4 @@
+# One name or surname per line (case-insensitive).
+# These authors will be underlined in the publications list.
+Petrenko
+Bashynska

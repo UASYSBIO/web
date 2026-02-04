@@ -466,20 +466,70 @@
             .replaceAll("'", '&#039;');
         }
 
+        function decodeEntities(value) {
+          const txt = document.createElement('textarea');
+          txt.innerHTML = String(value || '');
+          return txt.value;
+        }
+
+        function cleanText(value) {
+          return escapeHtml(decodeEntities(value));
+        }
+
+        function normalizeNameKey(value) {
+          return String(value || '')
+            .toLowerCase()
+            .replace(/[^a-z\u00c0-\u024f]+/g, '');
+        }
+
+        function extractLastName(author) {
+          const raw = String(author || '').trim();
+          if (!raw) return '';
+          if (raw.includes(',')) {
+            return raw.split(',')[0].trim();
+          }
+          const parts = raw.replace(/\./g, ' ').split(/\s+/).filter(Boolean);
+          if (parts.length === 1) return parts[0];
+          const last = parts[parts.length - 1];
+          if (last.length === 1) return parts[0];
+          return last;
+        }
+
+        function buildHighlightSet(names) {
+          const set = new Set();
+          (names || []).forEach((name) => {
+            const last = extractLastName(name);
+            const key = normalizeNameKey(last);
+            if (key) set.add(key);
+          });
+          return set;
+        }
+
+        function highlightAuthors(authors, highlightSet) {
+          return (authors || []).map((author) => {
+            const display = cleanText(author);
+            const lastName = extractLastName(author);
+            const key = normalizeNameKey(lastName);
+            if (key && highlightSet.has(key)) {
+              return `<u>${display}</u>`;
+            }
+            return display;
+          }).join(', ');
+        }
+
         function formatVenueLine(item) {
           const parts = [];
-          if (item.venue) parts.push(`<em>${escapeHtml(item.venue)}</em>`);
-          if (item.year) parts.push(escapeHtml(item.year));
-          if (item.source) parts.push(escapeHtml(item.source));
+          if (item.venue) parts.push(`<em>${cleanText(item.venue)}</em>`);
+          if (item.year) parts.push(cleanText(item.year));
           return parts.length ? `${parts.join(', ')}.` : '';
         }
 
-        function renderItem(item) {
-          const title = item.title ? escapeHtml(item.title) : 'Untitled';
-          const authors = (item.authors || []).length ? escapeHtml((item.authors || []).join(', ')) : '';
+        function renderItem(item, highlightSet) {
+          const title = item.title ? cleanText(item.title) : 'Untitled';
+          const authors = (item.authors || []).length ? highlightAuthors(item.authors, highlightSet) : '';
           const venueLine = formatVenueLine(item);
-          const url = item.url ? escapeHtml(item.url) : null;
-          const linkLabel = item.source === 'PubMed' ? 'View on PubMed' : 'View Publication';
+          const url = item.url ? cleanText(item.url) : null;
+          const linkLabel = 'View Publication';
 
           return `
             <div class="publication-item">
@@ -502,6 +552,22 @@
           const data = await res.json();
           if (!data || !Array.isArray(data.items)) throw new Error('Invalid publications.json structure');
           return data;
+        }
+
+        async function loadHighlightNames() {
+          const url = `data/publications.highlight.txt?cb=${Date.now()}`;
+          try {
+            const res = await fetch(url, { cache: 'no-store' });
+            if (!res.ok) throw new Error(`HTTP ${res.status} while loading ${url}`);
+            const text = await res.text();
+            return text
+              .split(/\r?\n/g)
+              .map((line) => line.trim())
+              .filter(Boolean)
+              .filter((line) => !line.startsWith('#'));
+          } catch (e) {
+            return ['Petrenko', 'Bashynska'];
+          }
         }
 
         // Temporary fallback: keep existing behavior if repo-backed list is not populated yet.
@@ -542,30 +608,31 @@
           return results.filter(Boolean);
         }
 
-	        (async () => {
-	          try {
-	            const data = await loadRepoPublications();
-	            if (data.generatedAt) {
-	              const dateStr = escapeHtml(new Date(data.generatedAt).toLocaleString());
-	              elStatus.innerHTML = `Auto-updated daily. Last update: ${dateStr}.`;
-	            } else {
-	              elStatus.innerHTML = 'Auto-update pending (data file not generated yet).';
-	            }
+        (async () => {
+          try {
+            const [data, highlightNames] = await Promise.all([loadRepoPublications(), loadHighlightNames()]);
+            const highlightSet = buildHighlightSet(highlightNames);
+            if (data.generatedAt) {
+              const dateStr = escapeHtml(String(data.generatedAt).slice(0, 10));
+              elStatus.innerHTML = `Last update: ${dateStr}.`;
+            } else {
+              elStatus.innerHTML = 'Update pending (data file not generated yet).';
+            }
 
-	            if (data.items.length === 0) {
-	              elStatus.innerHTML += ' No items found yet; showing a temporary list.';
-	              const legacy = await loadLegacyCrossref();
-	              elList.innerHTML = legacy.map(renderItem).join('');
-	              return;
-	            }
+            if (data.items.length === 0) {
+              elStatus.innerHTML += ' No items found yet; showing a temporary list.';
+              const legacy = await loadLegacyCrossref();
+              elList.innerHTML = legacy.map((item) => renderItem(item, highlightSet)).join('');
+              return;
+            }
 
-            elList.innerHTML = data.items.map(renderItem).join('');
+            elList.innerHTML = data.items.map((item) => renderItem(item, highlightSet)).join('');
           } catch (err) {
             console.error(err);
             const message = err && err.message ? err.message : 'Unknown error';
             elStatus.innerHTML = `Unable to load the auto-updated list (${escapeHtml(message)}). Showing a temporary list.`;
             const legacy = await loadLegacyCrossref();
-            elList.innerHTML = legacy.map(renderItem).join('');
+            elList.innerHTML = legacy.map((item) => renderItem(item, buildHighlightSet(['Petrenko', 'Bashynska']))).join('');
           }
         })();
       </script>

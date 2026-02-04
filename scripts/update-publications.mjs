@@ -3,7 +3,8 @@ import path from "node:path";
 
 const DEFAULT_AFFILIATION = "Ukrainian Institute for Systems Biology and Medicine";
 const DEFAULT_OUTFILE = "data/publications.json";
-const DEFAULT_MANUAL_FILE = "data/publications.manual.json";
+const DEFAULT_DOI_FILE = "data/publications.dois.txt";
+const DEFAULT_RECORDS_FILE = "data/publications.records.json";
 const DEFAULT_STRICT_AFFILIATION = true;
 
 function uniqStrings(values) {
@@ -24,6 +25,7 @@ function normalizeDoi(value) {
   if (!value) return null;
   let doi = String(value).trim();
   doi = doi.replace(/^https?:\/\/(dx\.)?doi\.org\//i, "");
+  doi = doi.replace(/v\d+$/i, "");
   return doi.toLowerCase();
 }
 
@@ -101,7 +103,10 @@ function normalizeItem(raw) {
   const date = toIsoDate(raw.firstPublicationDate || raw.pubDate);
   const year = raw.pubYear ? Number(raw.pubYear) : date ? Number(date.slice(0, 4)) : null;
 
-  const venue = raw.journalTitle || (source === "Preprint" ? "Preprint" : null);
+  let venue = raw.journalTitle || (source === "Preprint" ? "Preprint" : null);
+  if ((!venue || venue === "Preprint") && doi && String(doi).toLowerCase().startsWith("10.1101/")) {
+    venue = "bioRxiv";
+  }
   const url =
     doi ? `https://doi.org/${doi}` : pmid ? `https://pubmed.ncbi.nlm.nih.gov/${pmid}/` : raw?.fullTextUrlList?.fullTextUrl?.[0]?.url || null;
 
@@ -139,7 +144,10 @@ function normalizeCrossrefItem(item, sourceLabel = "Crossref") {
         .map((a) => `${a.given || ""} ${a.family || ""}`.trim())
         .filter(Boolean)
     : [];
-  const venue = Array.isArray(item?.["container-title"]) ? item["container-title"][0] : item?.["container-title"] || null;
+  let venue = Array.isArray(item?.["container-title"]) ? item["container-title"][0] : item?.["container-title"] || null;
+  if (!venue && doi && doi.startsWith("10.1101/")) {
+    venue = "bioRxiv";
+  }
 
   let year = null;
   let date = null;
@@ -176,11 +184,14 @@ function normalizeOpenAlexWork(work) {
   const authors = Array.isArray(work?.authorships)
     ? work.authorships.map((a) => a?.author?.display_name).filter(Boolean)
     : [];
-  const venue =
+  let venue =
     work?.primary_location?.source?.display_name ||
     work?.host_venue?.display_name ||
     work?.primary_location?.source?.publisher ||
     null;
+  if (!venue && doi && doi.startsWith("10.1101/")) {
+    venue = "bioRxiv";
+  }
   const date = work?.publication_date || null;
   const year = work?.publication_year || (date ? Number(date.slice(0, 4)) : null);
   const url = doi ? `https://doi.org/${doi}` : work?.id || null;
@@ -206,6 +217,10 @@ function normalizeManualRecord(record) {
   const pmid = record?.pmid ? String(record.pmid).trim() : null;
   const url = record?.url || (doi ? `https://doi.org/${doi}` : null);
   const id = pmid ? `PMID:${pmid}` : doi ? `DOI:${doi}` : url ? `URL:${url}` : null;
+  let venue = record?.venue || null;
+  if (!venue && doi && doi.startsWith("10.1101/")) {
+    venue = "bioRxiv";
+  }
 
   return {
     id,
@@ -213,7 +228,7 @@ function normalizeManualRecord(record) {
     type: record?.type || null,
     title: record?.title || (doi ? `DOI: ${doi}` : null),
     authors: Array.isArray(record?.authors) ? record.authors.filter(Boolean) : [],
-    venue: record?.venue || null,
+    venue,
     year: record?.year ? Number(record.year) : null,
     date: record?.date || null,
     doi,
@@ -479,17 +494,33 @@ async function readPrevious(outFile) {
   }
 }
 
-async function readManual(manualFile) {
+async function readDoiFile(filePath) {
   try {
-    const text = await readFile(manualFile, "utf8");
-    const data = JSON.parse(text);
-    return {
-      dois: Array.isArray(data?.dois) ? data.dois : [],
-      pmids: Array.isArray(data?.pmids) ? data.pmids : [],
-      records: Array.isArray(data?.records) ? data.records : [],
-    };
+    const text = await readFile(filePath, "utf8");
+    return uniqStrings(
+      text
+        .split(/\r?\n/g)
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .filter((line) => !line.startsWith("#"))
+        .map((line) => {
+          const match = line.match(/10\.\d{4,9}\/[^\s]+/i);
+          return normalizeDoi(match ? match[0] : line);
+        })
+        .filter(Boolean),
+    );
   } catch {
-    return { dois: [], pmids: [], records: [] };
+    return [];
+  }
+}
+
+async function readRecordsFile(filePath) {
+  try {
+    const text = await readFile(filePath, "utf8");
+    const data = JSON.parse(text);
+    return Array.isArray(data?.records) ? data.records : [];
+  } catch {
+    return [];
   }
 }
 
@@ -529,7 +560,8 @@ async function main() {
   const affiliation = process.env.AFFILIATION || DEFAULT_AFFILIATION;
   const affiliationAliases = parseAffiliationAliases(process.env.AFFILIATION_ALIASES);
   const outFile = process.env.OUTFILE || DEFAULT_OUTFILE;
-  const manualFile = process.env.MANUAL_FILE || DEFAULT_MANUAL_FILE;
+  const doiFile = process.env.DOI_FILE || DEFAULT_DOI_FILE;
+  const recordsFile = process.env.RECORDS_FILE || DEFAULT_RECORDS_FILE;
   const mailto = process.env.CROSSREF_MAILTO || process.env.MAILTO || "uasysbio@genomics.org.ua";
   const strictAffiliation =
     process.env.STRICT_AFFILIATION != null
@@ -537,7 +569,8 @@ async function main() {
       : DEFAULT_STRICT_AFFILIATION;
 
   const previous = await readPrevious(outFile);
-  const manual = await readManual(manualFile);
+  const requiredDois = await readDoiFile(doiFile);
+  const manualRecords = await readRecordsFile(recordsFile);
 
   const phrasesNormalized = uniqStrings([affiliation, ...affiliationAliases]).map(normalizeTextForMatch);
 
@@ -601,42 +634,40 @@ async function main() {
     .filter((x) => x.title && (x.url || x.doi));
 
   const manualItems = [];
-  for (const doi of uniqStrings(manual.dois)) {
+
+  const cachedByDoi = new Map();
+  if (previous?.items && Array.isArray(previous.items)) {
+    for (const item of previous.items) {
+      if (item?.doi) cachedByDoi.set(normalizeDoi(item.doi), item);
+    }
+  }
+
+  for (const doi of requiredDois) {
     try {
+      const cached = cachedByDoi.get(normalizeDoi(doi));
+      if (cached && cached.title && (cached.venue || cached.url)) {
+        manualItems.push({ ...cached, source: cached.source || "DOIList" });
+        continue;
+      }
       const item = await fetchCrossrefWork(doi, mailto);
       if (item) {
-        item.source = "Manual";
+        item.source = "DOIList";
         manualItems.push(item);
       } else {
-        manualItems.push(normalizeManualRecord({ doi, source: "Manual" }));
+        manualItems.push(normalizeManualRecord({ doi, source: "DOIList" }));
       }
     } catch (err) {
       console.error(`Manual DOI fetch failed for ${doi}: ${String(err?.message || err)}`);
-      manualItems.push(normalizeManualRecord({ doi, source: "Manual" }));
+      manualItems.push(normalizeManualRecord({ doi, source: "DOIList" }));
     }
   }
 
-  for (const pmid of uniqStrings(manual.pmids)) {
-    try {
-      const item = await fetchPubMedSummary(pmid);
-      if (item) {
-        item.source = "Manual";
-        manualItems.push(item);
-      } else {
-        manualItems.push(normalizeManualRecord({ pmid, source: "Manual" }));
-      }
-    } catch (err) {
-      console.error(`Manual PMID fetch failed for ${pmid}: ${String(err?.message || err)}`);
-      manualItems.push(normalizeManualRecord({ pmid, source: "Manual" }));
-    }
-  }
-
-  for (const record of manual.records) {
+  for (const record of manualRecords) {
     manualItems.push(normalizeManualRecord(record));
   }
 
   const map = new Map();
-  for (const item of manualItems) addOrMerge(map, { ...item, sources: ["Manual"] });
+  for (const item of manualItems) addOrMerge(map, { ...item, sources: ["DOIList"] });
   for (const item of europeItems) addOrMerge(map, { ...item, sources: ["EuropePMC"] });
   for (const item of crossrefItems) addOrMerge(map, { ...item, sources: ["Crossref"] });
   for (const item of openAlexItems) addOrMerge(map, { ...item, sources: ["OpenAlex"] });
@@ -658,7 +689,7 @@ async function main() {
       europePmc: europeItems.length,
       crossref: crossrefItems.length,
       openAlex: openAlexItems.length,
-      manual: manualItems.length,
+      doiList: manualItems.length,
       openAlexIds,
     },
     items: merged,
