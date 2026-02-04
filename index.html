@@ -444,7 +444,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2024 Ukrainian Institute for Systems Biology and Medicine. The banner image has been generated with DALL-E 2024-10 model.</p>
+        <p>&copy; <span id="copyright-year"></span> Ukrainian Institute for Systems Biology and Medicine. The banner image has been generated with DALL-E 2024-10 model.</p>
         <div class="social-icons">
             <a href="#"><i class="fab fa-twitter"></i></a>
             <a href="#"><i class="fab fa-facebook"></i></a>
@@ -456,6 +456,8 @@
     <script>
         const elList = document.getElementById('publication-list');
         const elStatus = document.getElementById('publication-status');
+        const elYear = document.getElementById('copyright-year');
+        if (elYear) elYear.textContent = new Date().getFullYear();
 
         function escapeHtml(value) {
           return String(value)
@@ -630,7 +632,7 @@
           } catch (err) {
             console.error(err);
             const message = err && err.message ? err.message : 'Unknown error';
-            elStatus.innerHTML = `Unable to load the auto-updated list (${escapeHtml(message)}). Showing a temporary list.`;
+            elStatus.innerHTML = `Unable to load the publications list (${escapeHtml(message)}). Showing a temporary list.`;
             const legacy = await loadLegacyCrossref();
             elList.innerHTML = legacy.map((item) => renderItem(item, buildHighlightSet(['Petrenko', 'Bashynska']))).join('');
           }

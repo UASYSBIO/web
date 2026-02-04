@@ -1,19 +1,10 @@
 {
-  "generatedAt": "2026-02-04T20:36:37.855Z",
-  "affiliation": "Ukrainian Institute for Systems Biology and Medicine",
-  "query": "(AFF:\"Ukrainian Institute for Systems Biology and Medicine\" OR AFF:(Ukrainian* AND Institute* AND Systems* AND Biology* AND Medicine*) OR AFF:(Ukrainian AND Institute AND Systems AND Biology AND Medicine*))",
+  "generatedAt": "2026-02-04T21:03:40.100Z",
   "count": 13,
-  "sources": {
-    "europePmc": 3,
-    "crossref": 0,
-    "openAlex": 0,
-    "manual": 17,
-    "openAlexIds": []
-  },
   "items": [
     {
-      "id": "PMID:41551411",
-      "source": "PubMed",
+      "id": "DOI:10.1016/j.jhepr.2025.101642",
+      "source": null,
       "type": null,
       "title": "Blood-based Vienna 3P/5P risk models accurately predict first hepatic decompensation in compensated advanced chronic liver disease.",
       "authors": [
@@ -40,19 +31,16 @@
         "Mandorfer M",
         "Reiberger T"
       ],
-      "venue": null,
+      "venue": "JHEP Reports",
       "year": 2026,
       "date": "2025-10-17",
       "doi": "10.1016/j.jhepr.2025.101642",
-      "pmid": "41551411",
-      "url": "https://doi.org/10.1016/j.jhepr.2025.101642",
-      "sources": [
-        "EuropePMC"
-      ]
+      "pmid": null,
+      "url": "https://doi.org/10.1016/j.jhepr.2025.101642"
     },
     {
-      "id": "PMID:41052886",
-      "source": "PubMed",
+      "id": "DOI:10.1136/jitc-2024-010975",
+      "source": null,
       "type": null,
       "title": "Preliminary qualification of a machine learning-based assessment of the tumor immune infiltrate as a predictor of outcome in patients with hepatocellular carcinoma treated with atezolizumab plus bevacizumab.",
       "authors": [
@@ -98,23 +86,17 @@
         "Rakaee M",
         "Pinato DJ"
       ],
-      "venue": null,
+      "venue": "Journal for ImmunoTherapy of Cancer",
       "year": 2025,
       "date": "2025-10-05",
       "doi": "10.1136/jitc-2024-010975",
-      "pmid": "41052886",
-      "url": "https://doi.org/10.1136/jitc-2024-010975",
-      "sources": [
-        "EuropePMC"
-      ]
+      "pmid": null,
+      "url": "https://doi.org/10.1136/jitc-2024-010975"
     },
     {
       "id": "DOI:10.1101/2025.09.05.674580",
-      "source": "Manual",
-      "sources": [
-        "Manual"
-      ],
-      "type": "posted-content",
+      "source": null,
+      "type": null,
       "title": "Robust software development practices improve citations of RNA-seq tools",
       "authors": [
         "Sanskruti Sharma",
@@ -149,11 +131,8 @@
     },
     {
       "id": "DOI:10.7124/bc.000b14",
-      "source": "Manual",
-      "sources": [
-        "Manual"
-      ],
-      "type": "journal-article",
+      "source": null,
+      "type": null,
       "title": "A current view of the genetics of substance use disorders",
       "authors": [
         "V. V. Bashynska",
@@ -168,12 +147,8 @@
     },
     {
       "id": "DOI:10.1210/clinem/dgaf131",
-      "source": "Manual",
-      "sources": [
-        "Manual",
-        "EuropePMC"
-      ],
-      "type": "journal-article",
+      "source": null,
+      "type": null,
       "title": "Lipid Dysregulation in Tangier Disease: A Case Series and Metabolic Characterization",
       "authors": [
         "Georg Semmler",
@@ -217,20 +192,17 @@
         "Scherer T",
         "Datz C"
       ],
-      "venue": "The Journal of Clinical Endocrinology &amp; Metabolism",
+      "venue": "The Journal of Clinical Endocrinology & Metabolism",
       "year": 2025,
       "date": "2025-06-17",
       "doi": "10.1210/clinem/dgaf131",
-      "pmid": "40037526",
+      "pmid": null,
       "url": "https://doi.org/10.1210/clinem/dgaf131"
     },
     {
       "id": "DOI:10.32402/dovkil2025.01.011",
-      "source": "Manual",
-      "sources": [
-        "Manual"
-      ],
-      "type": "journal-article",
+      "source": null,
+      "type": null,
       "title": "Genetic aspects of the development of overweight",
       "authors": [
         "O.Yu Mykhaylenko",
@@ -238,7 +210,7 @@
         "O.T. Yelizarova",
         "O.P. Rudnytska"
       ],
-      "venue": "Environment &amp; Health",
+      "venue": "Environment & Health",
       "year": 2025,
       "date": "2025-04-01",
       "doi": "10.32402/dovkil2025.01.011",
@@ -247,8 +219,8 @@
     },
     {
       "id": "DOI:10.1101/2025.03.15.643421",
-      "source": "Manual",
-      "type": "posted-content",
+      "source": null,
+      "type": null,
       "title": "Spatial single-cell interactome and niche-specific molecular signatures in alcohol-related liver disease",
       "authors": [
         "Oleksandr Petrenko",
@@ -264,14 +236,12 @@
         "Thomas Reiberger",
         "Tim Hendrikx"
       ],
+      "venue": "bioRxiv",
       "year": 2025,
       "date": "2025-03-17",
       "doi": "10.1101/2025.03.15.643421",
       "pmid": null,
-      "url": "https://doi.org/10.1101/2025.03.15.643421",
-      "sources": [
-        "Manual"
-      ]
+      "url": "https://doi.org/10.1101/2025.03.15.643421"
     },
     {
       "id": "URL:https://www.postersessiononline.eu/173580348_eu/congresos/EASL2025/aula/-FRI_58_YI_EASL2025.pdf",
@@ -284,15 +254,12 @@
       "date": null,
       "doi": null,
       "pmid": null,
-      "url": "https://www.postersessiononline.eu/173580348_eu/congresos/EASL2025/aula/-FRI_58_YI_EASL2025.pdf",
-      "sources": [
-        "Manual"
-      ]
+      "url": "https://www.postersessiononline.eu/173580348_eu/congresos/EASL2025/aula/-FRI_58_YI_EASL2025.pdf"
     },
     {
       "id": "DOI:10.7124/bc.000aee",
-      "source": "Manual",
-      "type": "journal-article",
+      "source": null,
+      "type": null,
       "title": "Network analysis identified novel disease module in rheumatoid arthritis",
       "authors": [
         "V. V. Bashynska",
@@ -311,18 +278,12 @@
       "date": "2024-09-10",
       "doi": "10.7124/bc.000aee",
       "pmid": null,
-      "url": "https://doi.org/10.7124/bc.000aee",
-      "sources": [
-        "Manual"
-      ]
+      "url": "https://doi.org/10.7124/bc.000aee"
     },
     {
       "id": "DOI:10.7124/bc.000ae3",
-      "source": "Manual",
-      "sources": [
-        "Manual"
-      ],
-      "type": "journal-article",
+      "source": null,
+      "type": null,
       "title": "Genetic effects of variation at ADH1B-ADH1C locus on substance use disorders and physical health traits",
       "authors": [
         "V. V. Bashynska",
@@ -352,8 +313,8 @@
     },
     {
       "id": "DOI:10.1016/j.cels.2024.03.006",
-      "source": "Manual",
-      "type": "journal-article",
+      "source": null,
+      "type": null,
       "title": "The resilience of Ukrainian scientists",
       "authors": [
         "Oksana Piven",
@@ -375,18 +336,12 @@
       "date": "2024-04-01",
       "doi": "10.1016/j.cels.2024.03.006",
       "pmid": null,
-      "url": "https://doi.org/10.1016/j.cels.2024.03.006",
-      "sources": [
-        "Manual"
-      ]
+      "url": "https://doi.org/10.1016/j.cels.2024.03.006"
     },
     {
       "id": "DOI:10.1016/j.jid.2023.03.272",
-      "source": "Manual",
-      "sources": [
-        "Manual"
-      ],
-      "type": "journal-article",
+      "source": null,
+      "type": null,
       "title": "268 Single-cell analysis of skin pre-cancerous and cancerous lesions reveals differences in their metabolic profile and immune cell types",
       "authors": [
         "L. Dousset",
@@ -407,11 +362,8 @@
     },
     {
       "id": "DOI:10.30978/mg-2020-2-18",
-      "source": "Manual",
-      "sources": [
-        "Manual"
-      ],
-      "type": "journal-article",
+      "source": null,
+      "type": null,
       "title": "Study of genetic features of patients with gluten-sensitive diseases in Ukraine",
       "authors": [
         "O. Yu. Gubska",

@@ -46,16 +46,6 @@ jobs:
 
       - name: Update data/publications.json
         env:
-          AFFILIATION: Ukrainian Institute for Systems Biology and Medicine
-          # Optional: include common variants, one per line or separated by "|"
-          # AFFILIATION_ALIASES: |
-          #   Ukrainian Institute for Systems Biology and Medicine, Kyiv, Ukraine
-          # Ensure only records that actually contain the phrase in affiliation are kept.
-          STRICT_AFFILIATION: "true"
-          # Optional: OpenAlex institution ID(s), comma-separated (overrides auto-discovery).
-          # OPENALEX_INSTITUTION_ID: I1234567890
-          # Optional: Crossref/OpenAlex contact email.
-          # MAILTO: uasysbio@genomics.org.ua
           # Optional: DOI list file override.
           # DOI_FILE: data/publications.dois.txt
           # Optional: non-DOI records file override (posters, etc).
