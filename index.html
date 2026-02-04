@@ -282,6 +282,13 @@
             margin: 0 auto;
         }
 
+        .publication-status {
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
         /* Contact Section */
         .contact {
             padding: 60px 50px;
@@ -424,6 +431,7 @@
     <section id="publications" class="publications">
         <h2>RECENT PUBLICATIONS & CONTRIBUTIONS</h2>
         <div class="publications-container">
+            <div id="publication-status" class="publication-status"></div>
             <div id="publication-list"></div>
         </div>
     </section>
@@ -444,91 +452,116 @@
         </div>
     </footer>
 
-    <!-- JavaScript to Fetch Publications in order -->
+    <!-- JavaScript to render publications (repo-backed, GitHub Pages compatible) -->
     <script>
-        const publications = [
-          {
-            doi: '10.1101/2025.03.15.643421',
-            underscoreNames: ['Oleksandr Petrenko']
-          },
-          {
-            doi: '10.1210/clinem/dgaf131',
-            underscoreNames: ['Oleksandr Petrenko']
-          },
-          {
-            doi: '10.7124/bc.000AEE',
-            underscoreNames: ['V. V. Bashynska', 'O. O. Petrenko']
-          },
-          {
-            doi: '10.1016/j.cels.2024.03.006',
-            underscoreNames: ['Oleksandr Petrenko']
-          }
+        const elList = document.getElementById('publication-list');
+        const elStatus = document.getElementById('publication-status');
+
+        function escapeHtml(value) {
+          return String(value)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+        }
+
+        function formatVenueLine(item) {
+          const parts = [];
+          if (item.venue) parts.push(`<em>${escapeHtml(item.venue)}</em>`);
+          if (item.year) parts.push(escapeHtml(item.year));
+          if (item.source) parts.push(escapeHtml(item.source));
+          return parts.length ? `${parts.join(', ')}.` : '';
+        }
+
+        function renderItem(item) {
+          const title = item.title ? escapeHtml(item.title) : 'Untitled';
+          const authors = (item.authors || []).length ? escapeHtml((item.authors || []).join(', ')) : '';
+          const venueLine = formatVenueLine(item);
+          const url = item.url ? escapeHtml(item.url) : null;
+          const linkLabel = item.source === 'PubMed' ? 'View on PubMed' : 'View Publication';
+
+          return `
+            <div class="publication-item">
+              <h3>${title}</h3>
+              ${authors ? `<p>${authors}</p>` : ''}
+              ${venueLine ? `<p>${venueLine}</p>` : ''}
+              ${url ? `<a href="${url}" target="_blank" rel="noopener noreferrer">${linkLabel}</a>` : ''}
+            </div>
+          `;
+        }
+
+        async function loadRepoPublications() {
+          const res = await fetch(`data/publications.json?cb=${Date.now()}`, { cache: 'no-store' });
+          if (!res.ok) throw new Error(`Failed to load publications.json (${res.status})`);
+          const data = await res.json();
+          if (!data || !Array.isArray(data.items)) throw new Error('Invalid publications.json structure');
+          return data;
+        }
+
+        // Temporary fallback: keep existing behavior if repo-backed list is not populated yet.
+        const legacyDois = [
+          '10.1101/2025.03.15.643421',
+          '10.1210/clinem/dgaf131',
+          '10.7124/bc.000AEE',
+          '10.1016/j.cels.2024.03.006'
         ];
-    
-        Promise.all(publications.map((pub, index) => {
-          return fetch(`https://api.crossref.org/works/${encodeURIComponent(pub.doi)}`)
-            .then(response => response.json())
-            .then(data => {
-              return { index: index, message: data.message, underscoreNames: pub.underscoreNames };
-            })
-            .catch(error => {
-              console.error('Error fetching publication:', error);
-              return { index: index, message: null, underscoreNames: pub.underscoreNames };
-            });
-        })).then(results => {
-          // Ensure publications display in the defined order
-          results.sort((a, b) => a.index - b.index);
-          results.forEach(item => {
-            if (item.message && item.message.author) {
-              const pubData = item.message;
-              const authors = pubData.author.map(author => {
-                let fullName = `${author.given} ${author.family}`;
-                if (item.underscoreNames.includes(fullName)) {
-                  fullName = `<u>${fullName}</u>`;
-                }
-                return fullName;
-              }).join(', ');
-    
-              // Fallback for container title if missing (e.g., for bioRxiv)
-              const containerTitle = (pubData['container-title'] && pubData['container-title'][0]) || 'bioRxiv';
-    
-              // Determine publication year using multiple potential fields
-              let publicationYear = 'Unknown';
-              if (pubData['published-print'] && pubData['published-print']['date-parts'] &&
-                  pubData['published-print']['date-parts'][0] &&
-                  pubData['published-print']['date-parts'][0][0]) {
-                publicationYear = pubData['published-print']['date-parts'][0][0];
-              } else if (pubData['published-online'] && pubData['published-online']['date-parts'] &&
-                         pubData['published-online']['date-parts'][0] &&
-                         pubData['published-online']['date-parts'][0][0]) {
-                publicationYear = pubData['published-online']['date-parts'][0][0];
-              } else if (pubData.issued && pubData.issued['date-parts'] &&
-                         pubData.issued['date-parts'][0] &&
-                         pubData.issued['date-parts'][0][0]) {
-                publicationYear = pubData.issued['date-parts'][0][0];
-              }
-    
-              // Build a details array for volume, page, and year. Only add non-empty values.
-              let details = [];
-              if(pubData.volume) details.push(pubData.volume);
-              if(pubData.page) details.push(pubData.page);
-              if(publicationYear && publicationYear !== 'Unknown') details.push(publicationYear);
-              let detailsStr = details.join(', ');
-    
-              const publicationHTML = `
-                <div class="publication-item">
-                  <h3>${pubData.title[0]}</h3>
-                  <p>${authors}</p>
-                  <p><em>${containerTitle}</em>${detailsStr ? ', ' + detailsStr : ''}.</p>
-                  <a href="https://doi.org/${publications[item.index].doi}" target="_blank">View Publication</a>
-                </div>
-              `;
-              document.getElementById('publication-list').innerHTML += publicationHTML;
-            } else {
-              console.error('Publication data incomplete for DOI: ' + publications[item.index].doi);
+
+        async function loadLegacyCrossref() {
+          const results = await Promise.all(legacyDois.map(async (doi) => {
+            try {
+              const response = await fetch(`https://api.crossref.org/works/${encodeURIComponent(doi)}`);
+              const data = await response.json();
+              const msg = data && data.message ? data.message : null;
+              if (!msg) return null;
+              const authors = Array.isArray(msg.author)
+                ? msg.author.map(a => `${a.given || ''} ${a.family || ''}`.trim()).filter(Boolean)
+                : [];
+              const venue = (msg['container-title'] && msg['container-title'][0]) || 'Publication';
+              const year =
+                (msg.issued && msg.issued['date-parts'] && msg.issued['date-parts'][0] && msg.issued['date-parts'][0][0]) ||
+                null;
+              return {
+                title: (msg.title && msg.title[0]) || doi,
+                authors,
+                venue,
+                year,
+                source: venue.toLowerCase().includes('biorxiv') ? 'bioRxiv' : '',
+                url: `https://doi.org/${doi}`
+              };
+            } catch (e) {
+              console.error('Error fetching legacy publication from Crossref:', doi, e);
+              return null;
             }
-          });
-        });
+          }));
+          return results.filter(Boolean);
+        }
+
+        (async () => {
+          try {
+            const data = await loadRepoPublications();
+            if (data.generatedAt) {
+              const dateStr = escapeHtml(new Date(data.generatedAt).toLocaleString());
+              elStatus.innerHTML = `Auto-updated daily. Last update: ${dateStr}.`;
+            } else {
+              elStatus.innerHTML = 'Auto-updated daily.';
+            }
+
+            if (data.items.length === 0) {
+              elStatus.innerHTML += ' No items found yet; showing a temporary list.';
+              const legacy = await loadLegacyCrossref();
+              elList.innerHTML = legacy.map(renderItem).join('');
+              return;
+            }
+
+            elList.innerHTML = data.items.map(renderItem).join('');
+          } catch (err) {
+            console.error(err);
+            elStatus.innerHTML = 'Unable to load the auto-updated list; showing a temporary list.';
+            const legacy = await loadLegacyCrossref();
+            elList.innerHTML = legacy.map(renderItem).join('');
+          }
+        })();
       </script>
 </body>
 </html>

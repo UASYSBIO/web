@@ -1,0 +1,45 @@
+name: Update publications
+
+on:
+  schedule:
+    # Daily at 02:17 UTC
+    - cron: "17 2 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-publications
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Update data/publications.json
+        env:
+          AFFILIATION: Ukrainian Institute for Systems Biology and Medicine
+          OUTFILE: data/publications.json
+        run: node scripts/update-publications.mjs
+
+      - name: Commit changes (if any)
+        run: |
+          if git diff --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/publications.json
+          git commit -m "chore: update publications data"
+          git push
+
