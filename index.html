@@ -492,8 +492,13 @@
         }
 
         async function loadRepoPublications() {
-          const res = await fetch(`data/publications.json?cb=${Date.now()}`, { cache: 'no-store' });
-          if (!res.ok) throw new Error(`Failed to load publications.json (${res.status})`);
+          const url = `data/publications.json?cb=${Date.now()}`;
+          const res = await fetch(url, { cache: 'no-store' });
+          const contentType = res.headers.get('content-type') || '';
+          if (!res.ok) throw new Error(`HTTP ${res.status} while loading ${url}`);
+          if (!contentType.includes('application/json')) {
+            throw new Error(`Unexpected content-type (${contentType || 'unknown'})`);
+          }
           const data = await res.json();
           if (!data || !Array.isArray(data.items)) throw new Error('Invalid publications.json structure');
           return data;
@@ -557,7 +562,8 @@
             elList.innerHTML = data.items.map(renderItem).join('');
           } catch (err) {
             console.error(err);
-            elStatus.innerHTML = 'Unable to load the auto-updated list; showing a temporary list.';
+            const message = err && err.message ? err.message : 'Unknown error';
+            elStatus.innerHTML = `Unable to load the auto-updated list (${escapeHtml(message)}). Showing a temporary list.`;
             const legacy = await loadLegacyCrossref();
             elList.innerHTML = legacy.map(renderItem).join('');
           }
