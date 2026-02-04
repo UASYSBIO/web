@@ -59,8 +59,30 @@ async function fetchJson(url) {
 
 function buildQuery(affiliation) {
   const q = affiliation.replaceAll('"', '\\"');
+
   // Prefer affiliation field, but keep a fallback phrase search in case of incomplete indexing.
-  return `AFF:"${q}" OR "${q}"`;
+  // Europe PMC supports a Lucene-like syntax. Wildcards generally work on terms (not quoted phrases),
+  // so we also build a token query that wildcards the last significant term.
+  const stop = new Set(["and", "or", "for", "of", "the", "a", "an", "in", "to", "with"]);
+  const tokens = affiliation
+    .split(/[^A-Za-z0-9]+/g)
+    .map((t) => t.trim())
+    .filter(Boolean)
+    .filter((t) => t.length >= 3)
+    .filter((t) => !stop.has(t.toLowerCase()));
+
+  let tokenQuery = null;
+  if (tokens.length >= 2) {
+    const last = tokens[tokens.length - 1];
+    const head = tokens.slice(0, -1);
+    tokenQuery = `AFF:(${head.join(" AND ")} AND ${last}*)`;
+  } else if (tokens.length === 1) {
+    tokenQuery = `AFF:${tokens[0]}*`;
+  }
+
+  const parts = [`AFF:"${q}"`, `"${q}"`];
+  if (tokenQuery) parts.splice(1, 0, tokenQuery);
+  return parts.join(" OR ");
 }
 
 function isWantedSource(item) {
@@ -173,4 +195,3 @@ async function main() {
 }
 
 await main();
-
